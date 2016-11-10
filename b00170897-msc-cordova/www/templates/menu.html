@@ -1,0 +1,37 @@
+<ion-side-menus enable-menu-with-back-views="true">
+  <ion-side-menu side="left">
+    <ul class="list">
+      <ion-item menu-close="" href="#/app/home" title="Home">
+        Home
+      </ion-item>
+
+      <ion-item menu-close="" href="#/app/3d-tests" title="3D Stress Tests">
+        3D Stress Tests
+      </ion-item>
+    </ul>
+  </ion-side-menu>
+
+  <ion-side-menu-content>
+    <ion-nav-bar class="bar-positive">
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" ng-click="openMenu()"></button>
+
+      </ion-nav-buttons>
+      <ion-nav-buttons side="right">
+        <button class="button button-icon button-clear ion-android-more-vertical"
+                ng-click="popover.show($event)"></button>
+
+      </ion-nav-buttons>
+
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent">
+      <h1>test</h1>
+      <!--Main content goes here-->
+    </ion-nav-view>
+  </ion-side-menu-content>
+
+
+  <!--<ion-side-menu side="right">-->
+  <!--&lt;!&ndash; Right Side Menu content should go here&ndash;&gt;-->
+  <!--</ion-side-menu>-->
+</ion-side-menus>
