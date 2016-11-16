@@ -31,7 +31,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $controllerProvider, $c
     })
 
     /* 2D Stress Tests */
-    .state('app.2dtests', {
+    .state('app.2dTests', {
       url: '/2d-tests',
       views: {
         'menuContent': {
@@ -41,12 +41,22 @@ app.config(function ($stateProvider, $urlRouterProvider, $controllerProvider, $c
       }
     })
 
-    .state('app.3dtests', {
+    .state('app.3dTests', {
       url: '/3d-tests',
       views: {
         'menuContent': {
           templateUrl: 'templates/3d-tests.html',
           controller: '3dTestsCtrl'
+        }
+      }
+    })
+
+    .state('app.3dTestsBouncing', {
+      url: '/3d-tests/bouncing',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/3d-tests-bouncing.html',
+          controller: '3dTestsBouncingCtrl'
         }
       },
       resolve: {
