@@ -27,6 +27,7 @@ CANNON = CANNON || {};
         gx: 0,
         gy: 0,
         gz: 0,
+        camAtts: {},
         iterations: 3,
         tolerance: 0.0001,
         k: 1e6,
@@ -89,6 +90,7 @@ CANNON = CANNON || {};
 
     // An edit of the Demo class' addScene() method, but we only require one scene setup at a time
     function addScene(initfunc){
+
         if(typeof(initfunc)!=="function"){
             throw new Error("1st argument of Experiment.setupScene(initfunc) must be a function!");
         }
@@ -150,7 +152,16 @@ CANNON = CANNON || {};
 
         // Camera
         camera = new THREE.PerspectiveCamera( 45, scr_w / scr_h, near, far );
-        camera.position.set(0, 50, 200);
+        camera.up = new THREE.Vector3(0, 0, 1);
+
+        camera.position.x = typeof settings.camAtts.x != 'undefined' ? settings.camAtts.x : 15;
+        camera.position.y = typeof settings.camAtts.y != 'undefined' ? settings.camAtts.y : 20;
+        camera.position.z = typeof settings.camAtts.z != 'undefined' ? settings.camAtts.z : 100;
+
+        camera.rotation.x = convertDegToRad( typeof settings.camAtts.rx != 'undefined' ? settings.camAtts.rx : 0 ); // Pitch (up, down)
+        camera.rotation.y = convertDegToRad( typeof settings.camAtts.ry != 'undefined' ? settings.camAtts.ry : 0 ); // Yaw (left, right)
+        camera.rotation.z = convertDegToRad( typeof settings.camAtts.rz != 'undefined' ? settings.camAtts.rz : 0 ); // Roll (Spin)
+        console.log(camera.target);
 
         scene.add( light );
         scene.add( camera );
@@ -169,7 +180,7 @@ CANNON = CANNON || {};
         renderer.shadowMapEnabled = true;
         renderer.shadowMapSoft = true;
 
-        // Trackball controls
+        /* Trackball controls
         controls = new THREE.TrackballControls( camera, renderer.domElement );
         controls.rotateSpeed = 1.0;
         controls.zoomSpeed = 1.2;
@@ -184,6 +195,7 @@ CANNON = CANNON || {};
         //controls.keys = [ 65, 83, 68 ]; // [ rotateKey, zoomKey, panKey ]
         controls.screen.width = scr_w;
         controls.screen.height = scr_h;
+        */
     }
 
     function onDocumentMouseMove( event ) {

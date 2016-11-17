@@ -1,7 +1,5 @@
 /* global CANNON,THREE,Detector */
 
-CANNON = CANNON || {};
-
 /**
  * Demo framework class. If you want to learn how to connect Cannon.js with Three.js, please look at the examples/ instead.
  * @class Demo
@@ -447,7 +445,7 @@ CANNON.Demo = function(options){
 
         container = document.createElement( 'div' );
         container.id = "CANVAS";
-        document.getElementById('canon-canvas').appendChild( container );
+        document.getElementById('cannon-canvas').appendChild( container );
 
         // Camera
         camera = new THREE.PerspectiveCamera( 24, SCREEN_WIDTH / SCREEN_HEIGHT, NEAR, FAR );
@@ -671,22 +669,6 @@ CANNON.Demo = function(options){
             sceneFolder = gui.addFolder('Scenes');
             sceneFolder.open();
         }
-
-        // Trackball controls
-        controls = new THREE.TrackballControls( camera, renderer.domElement );
-        controls.rotateSpeed = 1.0;
-        controls.zoomSpeed = 1.2;
-        controls.panSpeed = 0.2;
-        controls.noZoom = false;
-        controls.noPan = false;
-        controls.staticMoving = false;
-        controls.dynamicDampingFactor = 0.3;
-        var radius = 100;
-        controls.minDistance = 0.0;
-        controls.maxDistance = radius * 1000;
-        //controls.keys = [ 65, 83, 68 ]; // [ rotateKey, zoomKey, panKey ]
-        controls.screen.width = SCREEN_WIDTH;
-        controls.screen.height = SCREEN_HEIGHT;
     }
 
     var t = 0, newTime, delta;
@@ -736,14 +718,10 @@ CANNON.Demo = function(options){
         camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
         camera.updateProjectionMatrix();
 
-        controls.screen.width = SCREEN_WIDTH;
-        controls.screen.height = SCREEN_HEIGHT;
-
         camera.radius = ( SCREEN_WIDTH + SCREEN_HEIGHT ) / 4;
     }
 
     function render(){
-        controls.update();
         renderer.clear();
         renderer.render( that.scene, camera );
     }
