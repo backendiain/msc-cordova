@@ -60,14 +60,20 @@ app.config(function ($stateProvider, $urlRouterProvider, $controllerProvider, $c
         }
       },
       resolve: {
-        goat: function(){
-          return {value : 'Simple!'};
-        },
-
         /* Let's get our dependencies */
         json: function($http){
           // Get a script
           return $http({ method: 'GET', url: 'js/test.json'});
+        }
+      }
+    })
+
+    .state('app.3dTestsRollingBalls', {
+      url: '/3d-tests/rolling-balls',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/3d-tests-rolling-balls.html',
+          controller: '3dTestsRollingBallsCtrl'
         }
       }
     })

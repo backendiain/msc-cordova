@@ -28,6 +28,7 @@ CANNON = CANNON || {};
         gy: 0,
         gz: 0,
         camAtts: {},
+        liAtts: {},
         iterations: 3,
         tolerance: 0.0001,
         k: 1e6,
@@ -115,6 +116,8 @@ CANNON = CANNON || {};
         Detector.addGetWebGLMessage();
     }
 
+    var shadow_map_w = 512;
+    var shadow_map_h = 512;
     var margin = 0;
     var scr_w = window.innerWidth;
     var scr_h = window.innerHeight - 2 * margin;
@@ -145,10 +148,27 @@ CANNON = CANNON || {};
         ambient = new THREE.AmbientLight( 0x222222 );
         scene.add( ambient );
 
+        /*
         light = new THREE.PointLight( 0xffffff );
         light.position.x = 0;
         light.position.y = 15;
         light.position.z = 15;
+        */
+
+        light = new THREE.SpotLight( 0xffffff );
+        light.position.set( 30, 30, 40 );
+
+        light.position.x = typeof settings.liAtts.x != 'undefined' ? settings.liAtts.x : 30;
+        light.position.y = typeof settings.liAtts.y != 'undefined' ? settings.liAtts.y : 30;
+        light.position.z = typeof settings.liAtts.z != 'undefined' ? settings.liAtts.z : 30;
+
+        light.target.position.set( 0, 0, 0 );
+        light.castShadow = false;
+
+        light.shadowMapBias = 0.0039;
+        light.shadowMapDarkness = 0.5;
+        light.shadowMapWidth = shadow_map_w;
+        light.shadowMapHeight = shadow_map_h;
 
         // Camera
         camera = new THREE.PerspectiveCamera( 45, scr_w / scr_h, near, far );
