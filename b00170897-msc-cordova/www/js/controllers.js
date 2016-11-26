@@ -64,7 +64,7 @@ app.controller('3dTestsRollingBallsCtrl', function ($ionicPlatform, $scope, lazy
 
     /* Our Javascript dependencies that we need for this view! */
     var deps = [
-      'js/cannon/cannon.min.js',,
+      'js/cannon/cannon.min.js',
       'js/libs/Three.js',
       'js/libs/Detector.js',
       'js/cannon/scenes/rollingBalls.js',

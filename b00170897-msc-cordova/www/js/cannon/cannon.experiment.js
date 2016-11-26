@@ -171,28 +171,31 @@ CANNON = CANNON || {};
         light.shadowMapHeight = shadow_map_h;
 
         // Camera
-        //camera = new THREE.PerspectiveCamera( 24, scr_w / scr_h, near, far );
-        //try ortho
+        camera = new THREE.PerspectiveCamera( 24, scr_w / scr_h, near, far );
+        //try ortho - IS THIS OFF BECAUSE IT'S OWN ORIGIN IS OFF? TRY REVOLVING AROUND Y CENTRED ABOVE STAIRS TO SEE IF WE MOVE AROUND IT.
         camera.up = new THREE.Vector3(0, 1, 0);
-        camera.useQuaternion = true;
+        //camera.useQuaternion = true;
+        camera.eulerOrder = "ZYX"; // default is "XYZ" but we're having issues so we reverse it
+        console.log(camera);
 
         camera.position.x = typeof settings.camAtts.x != 'undefined' ? settings.camAtts.x : 15;
         camera.position.y = typeof settings.camAtts.y != 'undefined' ? settings.camAtts.y : 20;
         camera.position.z = typeof settings.camAtts.z != 'undefined' ? settings.camAtts.z : 100;
 
-        //camera.rotation.x = convertDegToRad( typeof settings.camAtts.rx != 'undefined' ? settings.camAtts.rx : 0 ); // Pitch (up, down)
-        //camera.rotation.y = convertDegToRad( typeof settings.camAtts.ry != 'undefined' ? settings.camAtts.ry : 0 ); // Yaw (left, right)
-        //camera.rotation.z = convertDegToRad( typeof settings.camAtts.rz != 'undefined' ? settings.camAtts.rz : 0 ); // Roll (Spin)
-
+        camera.rotation.x = convertDegToRad( typeof settings.camAtts.rx != 'undefined' ? settings.camAtts.rx : 0 ); // Pitch (up, down)
+        camera.rotation.y = convertDegToRad( typeof settings.camAtts.ry != 'undefined' ? settings.camAtts.ry : 0 ); // Yaw (left, right)
+        camera.rotation.z = convertDegToRad( typeof settings.camAtts.rz != 'undefined' ? settings.camAtts.rz : 0 ); // Roll (Spin)
+/*
         q_x = typeof settings.camAtts.rx != 'undefined' ? new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(1,0,0), convertDegToRad(settings.camAtts.rx) ) : 0;
         q_y = typeof settings.camAtts.ry != 'undefined' ? new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(0,1,0), convertDegToRad(settings.camAtts.ry) ) : 0;
-        q_z = typeof settings.camAtts.rz != 'undefined' ? new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(0,0,1), convertDegToRad(settings.camAtts.rz) ) : 0;
+        q_z = typeof settings.camAtts.rz != 'undefined' ? new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(0,0,1), convertDegToRad(settings.camAtts.rz) ) : camera;
 
         camera.quaternion.x = q_x.x;
         camera.quaternion.y = q_y.y;
         camera.quaternion.z = q_z.z;
+*/
 
-        //console.log(camera);
+        console.log(camera);
 
         scene.add( light );
         scene.add( camera );

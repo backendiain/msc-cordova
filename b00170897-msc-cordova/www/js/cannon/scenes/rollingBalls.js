@@ -35,7 +35,7 @@ function rollingBalls(Experiment){
   world = exp.getWorld();
   world.gravity.set(0, -10, 0);
   world.broadphase = new CANNON.NaiveBroadphase();
-  world.solver.iterations = 10;
+  world.solver.iterations = 6;
 
   /* Time for some materialism! */
   var groundMaterial = new CANNON.Material();
@@ -90,17 +90,16 @@ function rollingBalls(Experiment){
   var sphere_mat = new CANNON.Material();
   var sphere_shape = new CANNON.Sphere(1);
   var sphere = new CANNON.Body({
-    mass: 1,
+    mass: 10,
     shape: sphere_shape,
     position: {x: 20, y: 60, z:0 },
     material: sphere_mat,
-    velocity: {x:0, y:0, z:5},
-    angularVelocity: {x: 0, y:0, z:50}
+    velocity: {x:0, y:-10, z:0}
   });
 
   world.addBody(sphere);
   exp.addVisual(sphere);
 
-  var sphere_to_prism = new CANNON.ContactMaterial(prism_mat, sphere_mat, { friction: 0.1, restitution:0.8 });
+  var sphere_to_prism = new CANNON.ContactMaterial(prism_mat, sphere_mat, { friction: 0.1, restitution:0.9 });
   world.addContactMaterial(sphere_to_prism);
 };
