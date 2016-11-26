@@ -120,10 +120,10 @@ CANNON = CANNON || {};
     var shadow_map_h = 512;
     var margin = 0;
     var scr_w = window.innerWidth;
-    var scr_h = window.innerHeight - 2 * margin;
+    var scr_h = window.innerHeight;
     var camera, controls, renderer;
     var container;
-    var near = 0.1, far = 1000;
+    var near = 5, far = 2000;
 
     var windowHalfX = window.innerWidth / 2;
     var windowHalfY = window.innerHeight / 2;
@@ -171,17 +171,28 @@ CANNON = CANNON || {};
         light.shadowMapHeight = shadow_map_h;
 
         // Camera
-        camera = new THREE.PerspectiveCamera( 45, scr_w / scr_h, near, far );
-        camera.up = new THREE.Vector3(0, 0, 1);
+        //camera = new THREE.PerspectiveCamera( 24, scr_w / scr_h, near, far );
+        //try ortho
+        camera.up = new THREE.Vector3(0, 1, 0);
+        camera.useQuaternion = true;
 
         camera.position.x = typeof settings.camAtts.x != 'undefined' ? settings.camAtts.x : 15;
         camera.position.y = typeof settings.camAtts.y != 'undefined' ? settings.camAtts.y : 20;
         camera.position.z = typeof settings.camAtts.z != 'undefined' ? settings.camAtts.z : 100;
 
-        camera.rotation.x = convertDegToRad( typeof settings.camAtts.rx != 'undefined' ? settings.camAtts.rx : 0 ); // Pitch (up, down)
-        camera.rotation.y = convertDegToRad( typeof settings.camAtts.ry != 'undefined' ? settings.camAtts.ry : 0 ); // Yaw (left, right)
-        camera.rotation.z = convertDegToRad( typeof settings.camAtts.rz != 'undefined' ? settings.camAtts.rz : 0 ); // Roll (Spin)
-        console.log(camera.target);
+        //camera.rotation.x = convertDegToRad( typeof settings.camAtts.rx != 'undefined' ? settings.camAtts.rx : 0 ); // Pitch (up, down)
+        //camera.rotation.y = convertDegToRad( typeof settings.camAtts.ry != 'undefined' ? settings.camAtts.ry : 0 ); // Yaw (left, right)
+        //camera.rotation.z = convertDegToRad( typeof settings.camAtts.rz != 'undefined' ? settings.camAtts.rz : 0 ); // Roll (Spin)
+
+        q_x = typeof settings.camAtts.rx != 'undefined' ? new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(1,0,0), convertDegToRad(settings.camAtts.rx) ) : 0;
+        q_y = typeof settings.camAtts.ry != 'undefined' ? new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(0,1,0), convertDegToRad(settings.camAtts.ry) ) : 0;
+        q_z = typeof settings.camAtts.rz != 'undefined' ? new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(0,0,1), convertDegToRad(settings.camAtts.rz) ) : 0;
+
+        camera.quaternion.x = q_x.x;
+        camera.quaternion.y = q_y.y;
+        camera.quaternion.z = q_z.z;
+
+        //console.log(camera);
 
         scene.add( light );
         scene.add( camera );
@@ -264,7 +275,7 @@ CANNON = CANNON || {};
     function convertDegToRad(deg){
         if(typeof deg === 'undefined' || typeof deg != 'number') return false;
 
-        var rad = deg * Math.PI / 180;
+        var rad = deg * (Math.PI / 180);
         return rad;
     }
 

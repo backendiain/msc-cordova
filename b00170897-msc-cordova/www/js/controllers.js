@@ -75,7 +75,7 @@ app.controller('3dTestsRollingBallsCtrl', function ($ionicPlatform, $scope, lazy
 
         var CANNON = this.CANNON;
         var Experiment = new CANNON.Experiment({ 
-          camAtts: { x: 20, y: 40, z: 100, rx:-15, ry:15, rz:0 },
+          camAtts: { x: 200, y: 10, z: 5, rx:0, ry:90, rz:0 },
           liAtts: { x: 30, y: 80, z: 30 }
         });
 

@@ -3,11 +3,11 @@ function createPrism(vertices, offset){
   /* By default we just create a triangular prism */
   if(typeof vertices === 'undefined'){
           var vertices = [new CANNON.Vec3(0,0,0), //0
-                       new CANNON.Vec3(80,0,0), //1
-                       new CANNON.Vec3(0,40,0), //2
+                       new CANNON.Vec3(60,0,0), //1
+                       new CANNON.Vec3(0,30,0), //2
                        new CANNON.Vec3(0,0,40), //3
-                       new CANNON.Vec3(80,0,40), //4
-                       new CANNON.Vec3(0,40,40)]; //5
+                       new CANNON.Vec3(60,0,40), //4
+                       new CANNON.Vec3(0,30,40)]; //5
   }
 
   if(typeof offset === 'undefined') var offset = -0.35;
@@ -60,7 +60,7 @@ function rollingBalls(Experiment){
   var prism_shape = createPrism();
   var prism_body = new CANNON.Body({ 
     mass: 0,
-    position: { x:-40, y:0, z:-20 },
+    position: { x:-30, y:0, z:-15 },
     shape: prism_shape,
     material: prism_mat
   });
@@ -68,19 +68,39 @@ function rollingBalls(Experiment){
   world.addBody(prism_body);
   exp.addVisual(prism_body);
 
+  var step_x = 27.5, step_y = 0, step_z = 5;
+
+  // Let's make our stairs!
+  for(var i = 0; i < 12; i++){
+    step_x = i === 0 ? 27.5 : step_x - 5;
+    step_y = i === 0 ? 0 : step_y + 2.5;
+
+    var step_shape = new CANNON.Box( new CANNON.Vec3(2.5, 2.5, 20) );
+    var step_body = new CANNON.Body({
+      mass: 0,
+      shape: step_shape,
+      position: {x: step_x, y: step_y, z: 5}
+    });
+
+    world.addBody(step_body);
+    exp.addVisual(step_body);
+  }
+
   /* Add our spheres! */
   var sphere_mat = new CANNON.Material();
-  var sphere_shape = new CANNON.Sphere(0.5);
+  var sphere_shape = new CANNON.Sphere(1);
   var sphere = new CANNON.Body({
-    mass: 5,
+    mass: 1,
     shape: sphere_shape,
-    position: {x: -30, y: 60, z:0 },
-    material: sphere_mat
+    position: {x: 20, y: 60, z:0 },
+    material: sphere_mat,
+    velocity: {x:0, y:0, z:5},
+    angularVelocity: {x: 0, y:0, z:50}
   });
 
   world.addBody(sphere);
   exp.addVisual(sphere);
 
-  var sphere_to_prism = new CANNON.ContactMaterial(prism_mat, sphere_mat, { friction: 0.5, restitution:0.2 });
+  var sphere_to_prism = new CANNON.ContactMaterial(prism_mat, sphere_mat, { friction: 0.1, restitution:0.8 });
   world.addContactMaterial(sphere_to_prism);
 };
