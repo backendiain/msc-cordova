@@ -176,7 +176,6 @@ CANNON = CANNON || {};
         camera.up = new THREE.Vector3(0, 1, 0);
         //camera.useQuaternion = true;
         camera.eulerOrder = "ZYX"; // default is "XYZ" but we're having issues so we reverse it
-        console.log(camera);
 
         camera.position.x = typeof settings.camAtts.x != 'undefined' ? settings.camAtts.x : 15;
         camera.position.y = typeof settings.camAtts.y != 'undefined' ? settings.camAtts.y : 20;
@@ -194,8 +193,6 @@ CANNON = CANNON || {};
         camera.quaternion.y = q_y.y;
         camera.quaternion.z = q_z.z;
 */
-
-        console.log(camera);
 
         scene.add( light );
         scene.add( camera );

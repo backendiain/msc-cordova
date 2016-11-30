@@ -66,7 +66,7 @@ function createPolygon(vertices, offset){
                                       ]);
 }
 
-function rollingBalls(Experiment){
+function rollingBallsStairs(Experiment){
 
   var exp = Experiment;
 
@@ -165,7 +165,6 @@ function rollingBalls(Experiment){
   var step_x = 27.5, step_y = 0, step_z = 5;
 
   // Let's make our stairs!
-  /*
   for(var i = 0; i < 12; i++){
     step_x = i === 0 ? 27.5 : step_x - 5;
     step_y = i === 0 ? 0 : step_y + 2.5;
@@ -180,7 +179,6 @@ function rollingBalls(Experiment){
     world.addBody(step_body);
     exp.addVisual(step_body);
   }
-  */
 
   /* Add our spheres! */
   var sphere_mat = new CANNON.Material();

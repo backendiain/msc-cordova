@@ -78,6 +78,26 @@ app.config(function ($stateProvider, $urlRouterProvider, $controllerProvider, $c
       }
     })
 
+    .state('app.3dTestsRollingBallsStairs', {
+      url: '/3d-tests/rolling-balls-stairs',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/3d-tests-rolling-balls.html',
+          controller: '3dTestsRollingBallsStairsCtrl'
+        }
+      }
+    })
+
+    .state('app.3dTestsFunnel', {
+      url: '/3d-tests/funnel',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/3d-tests-funnel.html',
+          controller: '3dTestsFunnelCtrl'
+        }
+      }
+    })
+
   $urlRouterProvider.otherwise('/app/home');
 
 });
