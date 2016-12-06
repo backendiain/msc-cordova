@@ -98,6 +98,26 @@ app.config(function ($stateProvider, $urlRouterProvider, $controllerProvider, $c
       }
     })
 
+    .state('app.3dTestsWreckingBall', {
+      url: '/3d-tests/wrecking-ball',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/3d-tests-wrecking-ball.html',
+          controller: '3dTestsWreckingBallCtrl'
+        }
+      }
+    })
+
+    .state('app.cordovaTriggerPerformanceTest', {
+      url: '/cordova-trigger-performance-test',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/cordova-trigger-performance-test.html',
+          controller: 'cordovaTriggerPerformanceTestCtrl'
+        }
+      }
+    })
+
   $urlRouterProvider.otherwise('/app/home');
 
 });
