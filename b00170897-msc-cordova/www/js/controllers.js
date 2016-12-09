@@ -159,7 +159,13 @@ app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $s
     if(typeof cordova.plugins.cordovaPluginTriggerBenchmark === 'object'){
 
       /* Let's store this as a $scope variable so we can access the methods via ng-click directives */
-      $scope.cordovaPluginTriggerBenchmark = cordova.plugins.cordovaPluginTriggerBenchmark;
+      $scope.seq = function(total, len){
+        cordova.plugins.cordovaPluginTriggerBenchmark.seq(total, len);
+      }
+
+      $scope.con = function(total, len){
+        cordova.plugins.cordovaPluginTriggerBenchmark.con(total, len);
+      }
     }
   });
 });

@@ -21,7 +21,7 @@
     "cordova-plugin-splashscreen",
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
-    "cordova-plugin-trigger-benchmark"
+    "com.cordova.plugin.trigger.benchmark"
   ],
   "cordovaPlatforms": []
 }

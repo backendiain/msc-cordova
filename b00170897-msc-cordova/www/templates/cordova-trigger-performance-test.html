@@ -3,21 +3,48 @@
   	<p>cordovaTriggerPerformanceTest</p>
 	<h1>Forge</h1>
 	<h2>Sequential</h2>
-	<p>
-		<strong>10 bytes: </strong>
-		<button ng-click="cordovaPluginTriggerBenchmark.seq(100, 10)">100 requests</button> 
-		<button ng-click="cordovaPluginTriggerBenchmark.seq(1000, 10)">1000 requests</button> 
-		<button ng-click="cordovaPluginTriggerBenchmark.seq(10000, 10)">10000 requests</button>
-	</p>
 
-	<p><strong>100 bytes: </strong><a href="#" onclick="seq(100, 100); return false;">100 requests</a> <a href="#" onclick="seq(1000, 100); return false;">1000 requests</a> <a href="#" onclick="seq(10000, 100); return false;">10000 requests</a></p>
-	<p><strong>1000 bytes: </strong><a href="#" onclick="seq(100, 1000); return false;">100 requests</a> <a href="#" onclick="seq(1000, 1000); return false;">1000 requests</a> <a href="#" onclick="seq(10000, 1000); return false;">10000 requests</a></p>
-	<p><strong>10000 bytes: </strong><a href="#" onclick="seq(100, 10000); return false;">100 requests</a> <a href="#" onclick="seq(1000, 10000); return false;">1000 requests</a> <a href="#" onclick="seq(10000, 10000); return false;">10000 requests</a></p>
+	<p id="result"></p>
+
+	<p><strong>10 bytes: </strong></p>
+	<button ng-click="seq(100, 10);">100 requests</button> 
+	<button ng-click="seq(1000, 10);">1000 requests</button> 
+	<button ng-click="seq(10000, 10);">10000 requests</button>
+
+	<p><strong>100 bytes: </strong></p>
+	<button ng-click="seq(100, 100);">100 requests</button>
+	<button ng-click="seq(1000, 100);">1000 requests</button>
+	<button ng-click="seq(10000, 100);">10000 requests</button>
+
+	<p><strong>1000 bytes: </strong></p>
+	<button ng-click="seq(100, 1000);">100 requests</button>
+	<button ng-click="seq(1000, 1000);">1000 requests</button>
+	<button ng-click="seq(10000, 1000);">10000 requests</button>
+
+	<p><strong>10000 bytes: </strong></p>
+	<button ng-click="seq(100, 10000);">100 requests</button>
+	<button ng-click="seq(1000, 10000);">1000 requests</button>
+	<button ng-click="seq(10000, 10000);">10000 requests</button>
 	
 	<h2>Concurrent</h2>
-	<p><strong>10 bytes: </strong><a href="#" onclick="con(100, 10); return false;">100 requests</a> <a href="#" onclick="con(1000, 10); return false;">1000 requests</a> <a href="#" onclick="con(10000, 10); return false;">10000 requests</a></p>
-	<p><strong>100 bytes: </strong><a href="#" onclick="con(100, 100); return false;">100 requests</a> <a href="#" onclick="con(1000, 100); return false;">1000 requests</a> <a href="#" onclick="con(10000, 100); return false;">10000 requests</a></p>
-	<p><strong>1000 bytes: </strong><a href="#" onclick="con(100, 1000); return false;">100 requests</a> <a href="#" onclick="con(1000, 1000); return false;">1000 requests</a> <a href="#" onclick="con(10000, 1000); return false;">10000 requests</a></p>
-	<p><strong>10000 bytes: </strong><a href="#" onclick="con(100, 10000); return false;">100 requests</a> <a href="#" onclick="con(1000, 10000); return false;">1000 requests</a> <a href="#" onclick="con(10000, 10000); return false;">10000 requests</a></p>
+	<p><strong>10 bytes: </strong></p>
+	<button ng-click="con(100, 10);">100 requests</button> 
+	<button ng-click="con(1000, 10);">1000 requests</button>
+	<button ng-click="con(10000, 10);">10000 requests</button>
+
+	<p><strong>100 bytes: </strong></p>
+	<button ng-click="con(100, 100);">100 requests</button> 
+	<button ng-click="con(1000, 100);">1000 requests</button>
+	<button ng-click="con(10000, 100);">10000 requests</button>
+
+	<p><strong>1000 bytes: </strong></p>
+	<button ng-click="con(100, 1000);">100 requests</button> 
+	<button ng-click="con(1000, 1000);">1000 requests</button>
+	<button ng-click="con(10000, 1000);">10000 requests</button>
+
+	<p><strong>10000 bytes: </strong></p>
+	<button ng-click="con(100, 10000);">100 requests</button> 
+	<button ng-click="con(1000, 10000);">1000 requests</button>
+	<button ng-click="con(10000, 10000);">10000 requests</button>
   </ion-content>
 </ion-view>
