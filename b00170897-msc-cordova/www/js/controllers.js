@@ -147,6 +147,35 @@ app.controller('3dTestsWreckingBallCtrl', function ($ionicPlatform, $scope, lazy
   });
 });
 
+app.controller('3dTestsGeneratedBallsCtrl', function ($ionicPlatform, $scope, lazyScriptLoaderService){
+  $ionicPlatform.ready( function(){
+
+    /* Our Javascript dependencies that we need for this view! */
+    var deps = [
+      'js/cannon/cannon.min.js',
+      'js/libs/Three.js',
+      'js/libs/Detector.js',
+      'js/cannon/scenes/container-generated-balls.js',
+      'js/cannon/cannon.experiment.js'
+      ];
+
+    lazyScriptLoaderService.script(deps).then( function(){
+
+        var CANNON = this.CANNON;
+        var Experiment = new CANNON.Experiment({ 
+          camAtts: { x: -10, y: 20, z: 15, rx:-50, ry:-50, rz:0 },
+          liAtts: { x: 30, y: 80, z: 30 }
+        });
+
+        Experiment.addScene( function(){ 
+          generatedBalls(Experiment) 
+        });
+
+        Experiment.start();
+    });
+  });
+});
+
 app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $scope, lazyScriptLoaderService, $window){
   $ionicPlatform.ready( function(){
 
