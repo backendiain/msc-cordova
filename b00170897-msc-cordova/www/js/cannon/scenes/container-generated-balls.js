@@ -40,9 +40,10 @@ function generatedBalls(Experiment){
     var exp = Experiment;
 
     world = exp.getWorld();
-    world.gravity.set(0, -10, 0);
+    world.gravity.set(0, -30, 0);
     world.broadphase = new CANNON.NaiveBroadphase();
-    world.solver.iterations = 4;
+    world.solver.iterations = 8;
+    world.allowSleep = true;
 
     /* Time for some materialism! */
 
@@ -68,12 +69,12 @@ function generatedBalls(Experiment){
     var vertices = [
                     new CANNON.Vec3(-2,0,-2), // 0
                     new CANNON.Vec3(2,0,-2), //1,
-                    new CANNON.Vec3(5,3,-5), //2
-                    new CANNON.Vec3(-5,3,-5), //3
+                    new CANNON.Vec3(5,15,-5), //2
+                    new CANNON.Vec3(-5,15,-5), //3
                     new CANNON.Vec3(-2,0,2), //4
                     new CANNON.Vec3(2,0,2), //5
-                    new CANNON.Vec3(5,3,5), //6
-                    new CANNON.Vec3(-5,3,5) //7
+                    new CANNON.Vec3(5,15,5), //6
+                    new CANNON.Vec3(-5,15,5) //7
                 ];
 
     var vertFaces = [
@@ -84,16 +85,16 @@ function generatedBalls(Experiment){
                         /*[1,0,4,5]*/ // normal points +y
                     ];
 
-    var vaseShape = createPolygon(vertices, 0, vertFaces);
+    var vaseShape = createPolygon(vertices, -0.35, vertFaces);
     var vaseBody = new CANNON.Body({
         shape: vaseShape,
         mass: 0,
         material: vaseMaterial,
-        position: {x:1, y:0, z:1}
+        position: {x:1, y:-0.1, z:1}
     });
 
     world.addBody(vaseBody);
-    //exp.addVisual(vaseBody);
+    exp.addVisual(vaseBody);
 
     /* Generate our sphere fountain! */
     var bodies = [];
@@ -101,34 +102,42 @@ function generatedBalls(Experiment){
     var size = 0.5;
     var sphere_mat = new CANNON.Material();
 
-    interval = setInterval(function(){
+    var interval = setInterval(function(){
         // Sphere
         i++;
-        var sphereShape = new CANNON.Sphere(size);
-        var b1 = new CANNON.Body({
+        var sphere_shape = new CANNON.Sphere(size);
+        var sphere_body = new CANNON.Body({
+            shape: sphere_shape,
             material: sphere_mat,
-            mass: 1,
+            mass: 10,
             position: new CANNON.Vec3(
                 2*size*Math.sin(i),
-                3*size*Math.tan(i) + 12,
+                3*size*Math.tan(i) + 14,
                 7*2*size - (2/size) 
-            )
+            ),
+            angularVelocity: {x:0, y:0, z:0},
+            velocity: {x:0, y:0, z:0},
+            allowSleep: true,
+            sleepSpeedLimit: 1,
+            sleepTimeLimit:5
         });
-        b1.addShape(sphereShape);
-        world.addBody(b1);
-        exp.addVisual(b1);
-        bodies.push(b1);
+        world.addBody(sphere_body);
+        exp.addVisual(sphere_body);
+        bodies.push(sphere_body);
 
-        if(bodies.length>120){
+        if(bodies.length > 200){
+            /*
             var b = bodies.shift();
             exp.removeVisual(b);
             world.remove(b);
+            */
+            clearInterval(interval);
         }
     }, 200);
 
   /* Material Interactions */
-  var sphere_to_ground = new CANNON.ContactMaterial(sphere_mat, groundMaterial, { friction: 0.1, restitution:0.6 }); 
-  var sphere_to_sphere;
+  var sphere_to_ground = new CANNON.ContactMaterial(sphere_mat, groundMaterial, { friction: 0.7, restitution:0.2 }); 
+  var sphere_to_sphere = new CANNON.ContactMaterial(sphere_mat, sphere_mat, { friction:2, restitution:0.1 });
 
   world.addContactMaterial(sphere_to_ground);
 };

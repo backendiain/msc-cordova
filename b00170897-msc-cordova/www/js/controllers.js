@@ -163,7 +163,7 @@ app.controller('3dTestsGeneratedBallsCtrl', function ($ionicPlatform, $scope, la
 
         var CANNON = this.CANNON;
         var Experiment = new CANNON.Experiment({ 
-          camAtts: { x: -10, y: 20, z: 15, rx:-50, ry:-50, rz:0 },
+          camAtts: { x: 1, y: 4, z: 25, rx:0, ry:0, rz:0 },
           liAtts: { x: 30, y: 80, z: 30 }
         });
 
@@ -176,7 +176,7 @@ app.controller('3dTestsGeneratedBallsCtrl', function ($ionicPlatform, $scope, la
   });
 });
 
-app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $scope, lazyScriptLoaderService, $window){
+app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $window, $scope, lazyScriptLoaderService, cordovaTriggerTestService){
   $ionicPlatform.ready( function(){
 
     /* 
@@ -186,14 +186,30 @@ app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $s
     */
 
     if(typeof cordova.plugins.cordovaPluginTriggerBenchmark === 'object'){
+      //$scope.result = '';
 
       /* Let's store this as a $scope variable so we can access the methods via ng-click directives */
       $scope.seq = function(total, len){
-        cordova.plugins.cordovaPluginTriggerBenchmark.seq(total, len);
+        cordovaTriggerTestService.seq(total, len);
+        /*
+        cordovaTriggerTestService.seq(total, len).then( 
+          function (result){
+            console.log(result, 'result');
+          },
+          function (reject){
+            console.log(reject);
+        });
+        */
       }
 
       $scope.con = function(total, len){
-        cordova.plugins.cordovaPluginTriggerBenchmark.con(total, len);
+        cordovaTriggerTestService.con(total, len).then( 
+          function (result){
+            console.log(result);
+          },
+          function (reject){
+            console.log(reject);
+        });
       }
     }
   });

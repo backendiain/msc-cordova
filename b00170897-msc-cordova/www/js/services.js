@@ -366,3 +366,36 @@ app.service('lazyScriptLoaderService', ['$q', function ($q){
   }
 
 }]);
+
+app.service('cordovaTriggerTestService', ['$q', function ($q, $window, $scope){
+  this.seq = function(total, len){
+    var promise = $q( function (resolve, reject){
+      if(typeof window.cordova.plugins.cordovaPluginTriggerBenchmark === 'object'){
+        resolve(window.cordova.plugins.cordovaPluginTriggerBenchmark.seq(total, len));
+      }
+      else{
+        reject('The "com.cordova.plugin.trigger.benchmark" is undefined.');
+      }
+    });
+
+    promise.then( function(){
+      console.log(promise);
+      console.log(promise.$$state);
+      console.log(promise.$$state.value);
+    });
+    //return promise;
+  },
+  this.con = function(total, len){
+    var promise = $q( function (resolve, reject){
+      if(typeof window.cordova.plugins.cordovaPluginTriggerBenchmark === 'object'){
+        resolve(window.cordova.plugins.cordovaPluginTriggerBenchmark.con(total, len));
+      }
+      else{
+        reject('The "com.cordova.plugin.trigger.benchmark" is undefined.');
+      }
+    });
+
+    //console.log(promise);
+    return promise;
+  }
+}]);

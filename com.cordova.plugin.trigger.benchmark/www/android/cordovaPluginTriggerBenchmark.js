@@ -8,6 +8,7 @@ exports.coolMethod = function(arg0, success, error) {
 
 var cordovaPerformanceBenchmark = {
 	data: {},
+	/* test: function(){ return true; }, */
 	init: function(){
 		console.log('cordovaPerformanceBenchmark is working.');
 
@@ -45,32 +46,60 @@ var cordovaPerformanceBenchmark = {
 		var that = cordovaPerformanceBenchmark;
 		var count = 0;
 		var start = new Date().getTime();
-		var go = function() {
-			count++;
-			if (count <= total) {
-				that.ping(that.data[len], go);
-			} else {
-				// ADD IN DOUBLE CLICK SAFEGUARD
-				console.log(total + ' sequential requests with ' + len + ' bytes of data: ' + ((new Date().getTime() - start)/1000) + ' seconds.');
-				//document.body.innerHTML += '<p>'+total+' sequential requests with '+len+' bytes of data: '+((new Date().getTime() - start)/1000)+' seconds</p>';
+		var r = false;
+
+		var p = new Promise(function (resolve) {
+			var go = function() {
+				count++;
+				if (count <= total) {
+					that.ping(that.data[len], go);
+				} else {
+					r = (new Date().getTime() - start) / 1000;
+					that.result = r;
+
+					// ADD IN DOUBLE CLICK SAFEGUARD
+					//console.log(total + ' sequential requests with ' + len + ' bytes of data: ' + ((new Date().getTime() - start)/1000) + ' seconds.');
+					//document.body.innerHTML += '<p>'+total+' sequential requests with '+len+' bytes of data: '+((new Date().getTime() - start)/1000)+' seconds</p>';
+					
+					resolve(r);
+				}
 			}
-		}
-		go();
+
+			go();	
+		});
+
+		return p;
+
+		p.then(function(t){
+			console.log(that);
+
+			return that.result;
+		});
 	},
 	con: function (total, len) {
 		var that = cordovaPerformanceBenchmark;
 		var count = 0;
 		var start = new Date().getTime();
+		var r = false;
 		var response = function () {
 			count++;
 			if (count == total) {
 				console.log(total + ' concurrent requests with ' + len + ' bytes of data: ' + ((new Date().getTime() - start)/1000) + ' seconds.');
 				//document.body.innerHTML += '<p>'+total+' concurrent requests with '+len+' bytes of data: '+((new Date().getTime() - start)/1000)+' seconds</p>';
+				
+				that.result = (new Date().getTime() - start) / 1000;
+				console.log(that);
+				that.returnResult();
 			}
 		}
 		for (i = 0; i < total; i++) {
 			that.ping(that.data[len], response);
 		}
+	},
+	result: 0.000,
+	returnResult: function() {
+		console.log(this.result);
+		return this.result;
 	}
 };
 
