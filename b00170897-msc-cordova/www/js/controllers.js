@@ -190,8 +190,8 @@ app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $w
 
       /* Let's store this as a $scope variable so we can access the methods via ng-click directives */
       $scope.seq = function(total, len){
-        cordovaTriggerTestService.seq(total, len);
-        /*
+        //cordovaTriggerTestService.seq(total, len);
+        
         cordovaTriggerTestService.seq(total, len).then( 
           function (result){
             console.log(result, 'result');
@@ -199,7 +199,7 @@ app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $w
           function (reject){
             console.log(reject);
         });
-        */
+        
       }
 
       $scope.con = function(total, len){
@@ -212,5 +212,37 @@ app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $w
         });
       }
     }
+  });
+});
+
+app.controller('videoTestCtrl', function ($ionicPlatform, $window, $scope, lazyScriptLoaderService){
+  $ionicPlatform.ready( function(){
+    /* Our Javascript dependencies that we need for this view! */
+    var deps = [
+      'js/video.min.js'
+      ];
+
+    lazyScriptLoaderService.script(deps).then( function(){
+      videojs("video-stress-test-vid").ready( function(){
+        var player = this;
+
+        player.on("play", function(){
+          // Create our timestamp
+          var t;
+
+          // Start our video
+          player.play();
+          alert('We are playing!');
+        });
+
+        player.on('ended', function() {
+
+          // Register the end value of our timestamp
+          
+          alert('video is done!');
+        });
+
+      });
+    });
   });
 });

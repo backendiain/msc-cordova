@@ -128,6 +128,16 @@ app.config(function ($stateProvider, $urlRouterProvider, $controllerProvider, $c
       }
     })
 
+    .state('app.videoTest', {
+      url: '/video-test',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/videojs.html',
+          controller: 'videoTestCtrl'
+        }
+      }
+    })
+
   $urlRouterProvider.otherwise('/app/home');
 
 });
