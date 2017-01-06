@@ -186,7 +186,7 @@ app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $w
     */
 
     if(typeof cordova.plugins.cordovaPluginTriggerBenchmark === 'object'){
-      //$scope.result = '';
+      $scope.result = '0.00ms';
 
       /* Let's store this as a $scope variable so we can access the methods via ng-click directives */
       $scope.seq = function(total, len){
@@ -194,7 +194,8 @@ app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $w
         
         cordovaTriggerTestService.seq(total, len).then( 
           function (result){
-            console.log(result, 'result');
+            console.log('Sequential result: ' + result);
+            $scope.result = result + 'ms';
           },
           function (reject){
             console.log(reject);
@@ -205,7 +206,8 @@ app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $w
       $scope.con = function(total, len){
         cordovaTriggerTestService.con(total, len).then( 
           function (result){
-            console.log(result);
+            console.log('Consequential result: ' + result);
+            $scope.result = result + 'ms';
           },
           function (reject){
             console.log(reject);
@@ -227,7 +229,7 @@ app.controller('videoTestCtrl', function ($ionicPlatform, $window, $scope, lazyS
         var player = this;
 
         player.on("play", function(){
-          // Create our timestamp
+          // Create our timestamp for our start point of our stress test
           var t;
 
           // Start our video
@@ -237,8 +239,8 @@ app.controller('videoTestCtrl', function ($ionicPlatform, $window, $scope, lazyS
 
         player.on('ended', function() {
 
-          // Register the end value of our timestamp
-          
+          // Register the end value of our timestamp for the end point of our stress test
+
           alert('video is done!');
         });
 

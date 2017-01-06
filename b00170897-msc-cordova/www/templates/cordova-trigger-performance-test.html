@@ -1,11 +1,8 @@
 <ion-view cache-view="false" view-title="Cordova Bridge Performance Test">
   <ion-content class="content">
-  	<p>cordovaTriggerPerformanceTest</p>
-	<h1>Forge</h1>
-	<h2>Sequential</h2>
+	<p id="bridge-result">Time taken: <span id="result">{{result}}</span></p>
 
-	<p id="result">{{result}}</p>
-
+	<h3>Sequential</h3>
 	<p><strong>10 bytes: </strong></p>
 	<button ng-click="seq(100, 10);">100 requests</button> 
 	<button ng-click="seq(1000, 10);">1000 requests</button> 
@@ -26,7 +23,7 @@
 	<button ng-click="seq(1000, 10000);">1000 requests</button>
 	<button ng-click="seq(10000, 10000);">10000 requests</button>
 	
-	<h2>Concurrent</h2>
+	<h3>Concurrent</h3>
 	<p><strong>10 bytes: </strong></p>
 	<button ng-click="con(100, 10);">100 requests</button> 
 	<button ng-click="con(1000, 10);">1000 requests</button>

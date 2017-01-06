@@ -48,7 +48,7 @@ var cordovaPerformanceBenchmark = {
 		var start = new Date().getTime();
 		var r = false;
 
-		var p = new Promise(function (resolve) {
+		var p = new Promise( function (resolve) {
 			var go = function() {
 				count++;
 				if (count <= total) {
@@ -69,38 +69,35 @@ var cordovaPerformanceBenchmark = {
 		});
 
 		return p;
-
-		p.then(function(t){
-			console.log(that);
-
-			return that.result;
-		});
 	},
 	con: function (total, len) {
 		var that = cordovaPerformanceBenchmark;
 		var count = 0;
 		var start = new Date().getTime();
 		var r = false;
-		var response = function () {
-			count++;
-			if (count == total) {
-				console.log(total + ' concurrent requests with ' + len + ' bytes of data: ' + ((new Date().getTime() - start)/1000) + ' seconds.');
-				//document.body.innerHTML += '<p>'+total+' concurrent requests with '+len+' bytes of data: '+((new Date().getTime() - start)/1000)+' seconds</p>';
-				
-				that.result = (new Date().getTime() - start) / 1000;
-				console.log(that);
-				that.returnResult();
+
+		var p = new Promise( function (resolve) {
+			var response = function () {
+				count++;
+				if (count == total) {
+					//console.log(total + ' concurrent requests with ' + len + ' bytes of data: ' + ((new Date().getTime() - start)/1000) + ' seconds.');
+					//document.body.innerHTML += '<p>'+total+' concurrent requests with '+len+' bytes of data: '+((new Date().getTime() - start)/1000)+' seconds</p>';
+					
+					r = (new Date().getTime() - start) / 1000;
+					that.result = r;
+
+					resolve(r);
+				}
 			}
-		}
-		for (i = 0; i < total; i++) {
-			that.ping(that.data[len], response);
-		}
+
+			for (i = 0; i < total; i++) {
+				that.ping(that.data[len], response);
+			}
+		});
+
+		return p;
 	},
-	result: 0.000,
-	returnResult: function() {
-		console.log(this.result);
-		return this.result;
-	}
+	result: 0.000
 };
 
 cordovaPerformanceBenchmark.init();

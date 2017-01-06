@@ -378,12 +378,7 @@ app.service('cordovaTriggerTestService', ['$q', function ($q, $window, $scope){
       }
     });
 
-    promise.then( function(){
-      console.log(promise);
-      console.log(promise.$$state);
-      console.log(promise.$$state.value);
-    });
-    //return promise;
+    return promise;
   },
   this.con = function(total, len){
     var promise = $q( function (resolve, reject){
@@ -395,7 +390,6 @@ app.service('cordovaTriggerTestService', ['$q', function ($q, $window, $scope){
       }
     });
 
-    //console.log(promise);
     return promise;
   }
 }]);

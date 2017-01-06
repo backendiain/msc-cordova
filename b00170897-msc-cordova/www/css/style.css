@@ -1307,6 +1307,18 @@ video::-webkit-media-text-track-display {
   }
 }
 
+/* Cordova Plugin Trigger Bridge Benchmark Test */
+p#bridge-result{
+  margin-top:16px;
+  font-size:28px;
+}
+
+p#bridge-result span#result{
+  font-weight:700;
+  font-style:italic;
+}
+
+/* Video Stress Test */
 #video-stress-test-vid{
   height:430px;
 }
