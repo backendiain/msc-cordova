@@ -1319,6 +1319,11 @@ p#bridge-result span#result{
 }
 
 /* Video Stress Test */
+.video-wrapper{
+  width:100%;
+  max-width:100%;
+}
+
 #video-stress-test-vid{
   height:430px;
 }

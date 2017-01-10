@@ -176,6 +176,26 @@ app.controller('3dTestsGeneratedBallsCtrl', function ($ionicPlatform, $scope, la
   });
 });
 
+app.controller('3dClothTestCtrl', function ($ionicPlatform, $scope, lazyScriptLoaderService){
+  $ionicPlatform.ready( function(){
+    $scope.$on("$ionicView.loaded", function(event){
+        /* Our Javascript dependencies that we need for this view! */
+        var deps = [
+          'js/cannon/cannon.min.js',
+          'js/libs/Three.js',
+          'js/libs/Detector.js',
+          'js/cannon/scenes/cloth.js'
+          ];
+
+        lazyScriptLoaderService.script(deps).then( function(){
+          initCannon();
+          initThree();
+          animate();
+        });
+    });
+  });
+});
+
 app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $window, $scope, lazyScriptLoaderService, cordovaTriggerTestService){
   $ionicPlatform.ready( function(){
 

@@ -118,6 +118,16 @@ app.config(function ($stateProvider, $urlRouterProvider, $controllerProvider, $c
       }
     })
 
+    .state('app.3dCloth', {
+      url: '/3d-tests/cloth',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/3d-tests-cloth.html',
+          controller: '3dClothTestCtrl'
+        }
+      }
+    })
+
     .state('app.cordovaTriggerPerformanceTest', {
       url: '/cordova-trigger-performance-test',
       views: {
