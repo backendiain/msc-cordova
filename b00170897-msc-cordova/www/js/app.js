@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-var app = angular.module('app', ['ionic']);
+var app = angular.module('app', ['ionic', 'ngCordova']);
 
 app.config(function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvider, $filterProvider, $provide) {
 
@@ -128,12 +128,32 @@ app.config(function ($stateProvider, $urlRouterProvider, $controllerProvider, $c
       }
     })
 
+    .state('app.3dBabylon', {
+      url: '/3d-tests/babylon',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/3d-tests-babylon.html',
+          controller: '3dBabylonTestCtrl'
+        }
+      }
+    })
+
     .state('app.cordovaTriggerPerformanceTest', {
       url: '/cordova-trigger-performance-test',
       views: {
         'menuContent': {
           templateUrl: 'templates/cordova-trigger-performance-test.html',
           controller: 'cordovaTriggerPerformanceTestCtrl'
+        }
+      }
+    })
+
+    .state('app.wthrTest', {
+      url: '/weather-promise-test',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/weather-promise-test.html',
+          controller: 'wthrTestCtrl'
         }
       }
     })

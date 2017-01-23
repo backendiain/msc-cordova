@@ -1307,6 +1307,13 @@ video::-webkit-media-text-track-display {
   }
 }
 
+/* Babylon.js */
+#canvas{
+    width   : 100%;
+    height  : 100%;
+    touch-action: none;
+}
+
 /* Cordova Plugin Trigger Bridge Benchmark Test */
 p#bridge-result{
   margin-top:16px;

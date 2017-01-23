@@ -252,7 +252,7 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
             weather_containers[i].className = weather_containers[i].className + ' loaded';
           }
         }
-        //return weatherData;
+        return weatherData;
       };
 
       /* Our callback function to fire in case of an error */
@@ -267,6 +267,7 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
       var forecast_req = baseURL + qry + key;
 
       /* Let's try and get our weather data! */
+      /**** WRAP THIS IN A NATIVE PROMISE, PERHAPS WRAP .SEND()? ****/
       var forecastXmlHttp = new XMLHttpRequest();
       forecastXmlHttp.onreadystatechange = function () {
         /* XMLHttpRequest().readyState definitions at: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState */
@@ -282,34 +283,26 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
       /* Make our request */
       forecastXmlHttp.open("GET", forecast_req, true);
       forecastXmlHttp.send();
+
+      /* Angular $http request */
+      return $http({ method: 'GET', url: forecast_req }).then(
+        function successCallback(response) {
+          var data = getForecastOnSuccess(response.data);
+          return data; // Just make sure we return in this and there's no scoping issues
+        }, 
+        function errorCallback(response) {
+          return getForecastOnError(response.status);
+      });
+
+      /* This is a test  */
+      //return $http({ method: 'GET', url: forecast_req });
     }
 
     function siteListOnError(response) {
       alert('Met Office \"sitelist.json\" request error\n (Invalid Response) Status:' + response.status + ' Status Text: ' + response.statusText);
     }
 
-    /* Let's try and get our weather data! */
-    /*
-     var req = '/lib/met-office/sitelist.json';
-
-     var xmlHttp = new XMLHttpRequest();
-     xmlHttp.onreadystatechange = function(){
-     /* XMLHttpRequest().readyState definitions at: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState */
-    /*
-     if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
-     var data = JSON.parse(xmlHttp.responseText);
-     siteListOnSuccess(data, pos);
-     }
-     else if(xmlHttp.readyState == 4 && xmlHttp.status != 200){
-     siteListOnError();
-     }
-     };
-     */
-
-    /* Make our request
-     xmlHttp.open("GET", req, true);
-     xmlHttp.send();*/
-
+    /* First we get our weather station site list provided by the MET Office and then either throw an error or continue to get a weather report */
     var req = '/lib/met-office/sitelist.json';
 
     if (ionic.Platform.isAndroid()) {
@@ -319,12 +312,26 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
     $http({
       method: 'GET',
       url: req
-    }).then(function successCallback(response) {
+    }).then( function successCallback(response) {
       var data = response.data;
       siteListOnSuccess(data, pos);
     }, function errorCallback(response) {
       siteListOnError();
     });
+
+    function test(response){
+      return $q( function (resolve){ if(2 === 2) resolve("success") });
+    }
+
+    function testy(response){
+      return $q( function (resolve){ console.log(response); return response; });
+    }
+
+    /* Test promise chain - we can see the above two functions returning promises from one to the next, we should do the same with getForecastOnSuccess() and error */
+    return $http({
+      method: 'GET',
+      url: req
+    }).then(function(response){ return siteListOnSuccess(response.data, pos) }, function(){ return siteListOnError(); }).then(function(response){ return response }, function(){ return 'error'; });
   };
 }]);
 
@@ -348,9 +355,9 @@ app.service('lazyScriptLoaderService', ['$q', function ($q){
       t = document.getElementsByTagName("script")[0],
       s = document.createElement("script");
 
-      s.type = "text/javascript";
+      //s.type = "text/javascript";
       s.src = url;
-      s.async = true;
+      s.async = "true";
       s.onload = s.onreadystatechange = function(){
         if(!r && (!this.readyState || this.readyState == "complete")){
           r = true;

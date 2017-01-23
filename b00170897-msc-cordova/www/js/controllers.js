@@ -22,12 +22,6 @@ app.controller('homeCtrl', function ($scope, $ionicPlatform) {
   });
 })
 
-app.controller('2dTestsCtrl', function ($scope, $ionicSideMenuDelegate) {
-  $scope.openMenu = function () {
-    $ionicSideMenuDelegate.toggleLeft();
-  };
-})
-
 app.controller('3dTestsCtrl', function ($scope, $ionicSideMenuDelegate) {
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
@@ -42,13 +36,12 @@ app.controller('3dTestsBouncingCtrl', function ($ionicPlatform, $scope, json, la
       'js/cannon/cannon.min.js',,
       'js/libs/Three.js',
       'js/libs/Detector.js',
-      'js/cannon/scenes/bouncingBalls.js',
-      'js/cannon/cannon.experiment.js'
+      'js/cannon/scenes/bouncingBalls.js'
       ];
 
     lazyScriptLoaderService.script(deps).then( function(){
 
-        var CANNON = this.CANNON;
+        var CANNON = window.CANNON;
         var Experiment = new CANNON.Experiment({ camAtts: { x: -5, y: 20, z: 20, rx:-46, ry:-10, rz:0 } });
 
         Experiment.addScene( function(){ 
@@ -68,13 +61,12 @@ app.controller('3dTestsRollingBallsCtrl', function ($ionicPlatform, $scope, lazy
       'js/cannon/cannon.min.js',
       'js/libs/Three.js',
       'js/libs/Detector.js',
-      'js/cannon/scenes/rollingBalls.js',
-      'js/cannon/cannon.experiment.js'
+      'js/cannon/scenes/rollingBalls.js'
       ];
 
     lazyScriptLoaderService.script(deps).then( function(){
 
-        var CANNON = this.CANNON;
+        var CANNON = window.CANNON;
         var Experiment = new CANNON.Experiment({ 
           camAtts: { x: 130, y: 67.5, z: 45, rx:-22.5, ry:72.5, rz:0 },
           liAtts: { x: 30, y: 80, z: 30 }
@@ -89,109 +81,93 @@ app.controller('3dTestsRollingBallsCtrl', function ($ionicPlatform, $scope, lazy
   });
 });
 
-app.controller('3dTestsFunnelCtrl', function ($ionicPlatform, $scope, lazyScriptLoaderService){
-  $ionicPlatform.ready( function(){
-
-    /* Our Javascript dependencies that we need for this view! */
-    var deps = [
-      'js/cannon/cannon.min.js',
-      'js/libs/Three.js',
-      'js/libs/Detector.js',
-      'js/cannon/scenes/funnel.js',
-      'js/cannon/cannon.experiment.js'
-      ];
-
-    lazyScriptLoaderService.script(deps).then( function(){
-
-        var CANNON = this.CANNON;
-        var Experiment = new CANNON.Experiment({ 
-          camAtts: { x: 0, y: 50, z: 100, rx:-25, ry:0, rz:0 },
-          liAtts: { x: 30, y: 80, z: 30 }
-        });
-
-        Experiment.addScene( function(){ 
-          funnel(Experiment) 
-        });
-
-        Experiment.start();
-    });
-  });
-});
-
-app.controller('3dTestsWreckingBallCtrl', function ($ionicPlatform, $scope, lazyScriptLoaderService){
-  $ionicPlatform.ready( function(){
-
-    /* Our Javascript dependencies that we need for this view! */
-    var deps = [
-      'js/cannon/cannon.min.js',
-      'js/libs/Three.js',
-      'js/libs/Detector.js',
-      'js/cannon/scenes/wrecking-ball.js',
-      'js/cannon/cannon.experiment.js'
-      ];
-
-    lazyScriptLoaderService.script(deps).then( function(){
-
-        var CANNON = this.CANNON;
-        var Experiment = new CANNON.Experiment({ 
-          camAtts: { x: 15, y: 2, z: 0, rx:0, ry:90, rz:0 },
-          liAtts: { x: 30, y: 80, z: 30 }
-        });
-
-        Experiment.addScene( function(){ 
-          wreckingBall(Experiment) 
-        });
-
-        Experiment.start();
-    });
-  });
-});
-
 app.controller('3dTestsGeneratedBallsCtrl', function ($ionicPlatform, $scope, lazyScriptLoaderService){
   $ionicPlatform.ready( function(){
 
-    /* Our Javascript dependencies that we need for this view! */
+    /* Our Javascript dependencies that we need for this view! NOTE: "cannon.experiment.js" merged into "cannon.min.js" */
     var deps = [
       'js/cannon/cannon.min.js',
       'js/libs/Three.js',
       'js/libs/Detector.js',
-      'js/cannon/scenes/container-generated-balls.js',
-      'js/cannon/cannon.experiment.js'
+      'js/cannon/scenes/container-generated-balls.js'
       ];
 
     lazyScriptLoaderService.script(deps).then( function(){
 
-        var CANNON = this.CANNON;
-        var Experiment = new CANNON.Experiment({ 
-          camAtts: { x: 1, y: 4, z: 25, rx:0, ry:0, rz:0 },
-          liAtts: { x: 30, y: 80, z: 30 }
-        });
+      var CANNON = window.CANNON;
+      var Experiment = new CANNON.Experiment({ 
+        camAtts: { x: 1, y: 4, z: 25, rx:0, ry:0, rz:0 },
+        liAtts: { x: 30, y: 80, z: 30 }
+      });
 
-        Experiment.addScene( function(){ 
-          generatedBalls(Experiment) 
-        });
+      Experiment.addScene( function(){ 
+        generatedBalls(Experiment);
+      });
 
-        Experiment.start();
+      Experiment.start();
     });
   });
 });
 
 app.controller('3dClothTestCtrl', function ($ionicPlatform, $scope, lazyScriptLoaderService){
   $ionicPlatform.ready( function(){
-    $scope.$on("$ionicView.loaded", function(event){
-        /* Our Javascript dependencies that we need for this view! */
-        var deps = [
-          'js/cannon/cannon.min.js',
-          'js/libs/Three.js',
-          'js/libs/Detector.js',
-          'js/cannon/scenes/cloth.js'
-          ];
+    /* Our Javascript dependencies that we need for this view! */
+    var deps = [
+      'js/cannon/cannon.min.js',
+      'js/libs/Three.js',
+      'js/libs/Detector.js',
+      'js/cannon/scenes/cloth.js'
+      ];
 
-        lazyScriptLoaderService.script(deps).then( function(){
-          initCannon();
-          initThree();
-          animate();
-        });
+    lazyScriptLoaderService.script(deps).then( function(){
+      initCannon();
+      initThree();
+      animate();
+    });
+  });
+});
+
+app.controller('3dBabylonTestCtrl', function ($ionicPlatform, $scope, lazyScriptLoaderService){
+  $ionicPlatform.ready( function(){
+    /* Our Javascript dependencies that we need for this view! */
+    var deps = [
+      'js/babylon.custom.js'
+      ];
+
+    lazyScriptLoaderService.script(deps).then( function(){
+      function createScene(){
+
+        var scene = new BABYLON.Scene(eng);
+        
+        var camera = new BABYLON.ArcRotateCamera('camera1', 0,0.8,100 ,BABYLON.Vector3.Zero(), scene);
+        camera.setTarget(BABYLON.Vector3.Zero());
+        camera.attachControl(canvas, false);
+
+        /* Lights */
+        var light = new BABYLON.PointLight("Omni", new BABYLON.Vector3(0, 100, 100), scene);
+
+        var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+        groundMaterial.diffuseTexture = new BABYLON.Texture("../img/sunflower.jpg", scene);
+
+        var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "../img/sunflower.jpg", 200, 200, 500, 0, 10, scene, false);
+        ground.rotation
+        ground.material = groundMaterial;
+
+        return scene;
+      }
+
+      var canvas = document.getElementById('canvas');
+      var eng = new BABYLON.Engine(canvas, true);
+
+      var scene = createScene();
+
+      eng.runRenderLoop( function(){
+        scene.render();
+      });
+
+      window.addEventListener('resize', function(){
+        eng.resize();
+      });
     });
   });
 });
@@ -234,6 +210,17 @@ app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $w
         });
       }
     }
+  });
+});
+
+app.controller('wthrTestCtrl', function ($ionicPlatform, $window, $scope, lazyScriptLoaderService, wthrService){
+  $ionicPlatform.ready( function(){
+    var pos;
+
+    wthrService.getCurrentPosition().then(function (data) {
+      pos = data;
+      $scope.weather = wthrService.getWeather(pos).then(function(response){ console.log(response); });
+    });
   });
 });
 
