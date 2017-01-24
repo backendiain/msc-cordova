@@ -22,7 +22,8 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
     return deferred.promise;
   };
 
-  this.getWeather = function (pos) {
+  /* promiseType parameter must be equal to '$http' or 'nativeJS' */
+  this.getWeather = function (pos, promiseType) {
     var weatherData = {};
 
     function siteListOnSuccess(data, pos) {
@@ -33,7 +34,8 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
       lng = pos.coords.longitude;
 
       /* find-locations.js parseJSON() method puts the Met Office monitoring locations list in the format it needs */
-      locations = parseJSON(data);
+      if( typeof data === 'string' ) data = JSON.parse(data); // With the native Javascript method the data just comes back as a string so we convert it to an object
+      locations = parseJSON(data); // Despite the similar name this doesn't do the same as the above native JSON.parse() method
 
       // where you are
       standpoint = new Location(null, "Your location", lat, lng);
@@ -267,35 +269,66 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
       var forecast_req = baseURL + qry + key;
 
       /* Let's try and get our weather data! */
-      /**** WRAP THIS IN A NATIVE PROMISE, PERHAPS WRAP .SEND()? ****/
-      var forecastXmlHttp = new XMLHttpRequest();
-      forecastXmlHttp.onreadystatechange = function () {
-        /* XMLHttpRequest().readyState definitions at: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState */
-        if (forecastXmlHttp.readyState == 4 && forecastXmlHttp.status == 200) {
-          var forecastData = JSON.parse(forecastXmlHttp.responseText);
-          getForecastOnSuccess(forecastData);
-        }
-        else if (forecastXmlHttp.readyState == 4 && forecastXmlHttp.status != 200) {
-          getForecastOnError(forecastXmlHttp.status);
-        }
-      };
+      var promise;
+
+      function makeNativeForecastReq(method, url){
+        return new Promise( function(resolve, reject){
+          var forecast_xhr = new XMLHttpRequest();
+          forecast_xhr.open(method, url);
+
+          forecast_xhr.onload = function(){
+            if(this.status >= 200 && this.status < 300){
+              resolve(forecast_xhr.response);
+            }
+            else{
+              reject({
+                status: this.status,
+                statusText: forecast_xhr.statusText
+              });
+            }
+          };
+
+          forecast_xhr.onerror = function(){
+            reject({
+              status: this.status,
+              statusText: forecast_xhr.statusText
+            });
+          };
+
+          forecast_xhr.send();
+        });
+      }
 
       /* Make our request */
-      forecastXmlHttp.open("GET", forecast_req, true);
-      forecastXmlHttp.send();
+      if(promiseType === '$http'){
+        var promise = $http({ 
+          method: 'GET', 
+          url: forecast_req 
+        }).then(
+          function forecastReqSuccessCallback(forecast) {
+            var forecast = getForecastOnSuccess(forecast.data);
+            return forecast;
+          }, 
+          function forecastReqErrorCallback(forecast) {
+            return getForecastOnError(forecast.status);
+        });
+      }
+      else{
+        /* Get Site List - fallback to native if the promiseType parameter isn't defined */
+        promise = makeNativeForecastReq(
+          'GET', forecast_req
+        ).then( 
+          function forecastReqSuccessCallback(forecast){ 
+            var forecast = getForecastOnSuccess( JSON.parse(forecast) ); // Convert the returned string back to an object
+            return forecast;
+        }).catch(
+          function (e){
+            throw 'There has been an error getting the forecast data.';
+          }
+        );
+      }
 
-      /* Angular $http request */
-      return $http({ method: 'GET', url: forecast_req }).then(
-        function successCallback(response) {
-          var data = getForecastOnSuccess(response.data);
-          return data; // Just make sure we return in this and there's no scoping issues
-        }, 
-        function errorCallback(response) {
-          return getForecastOnError(response.status);
-      });
-
-      /* This is a test  */
-      //return $http({ method: 'GET', url: forecast_req });
+      return promise;
     }
 
     function siteListOnError(response) {
@@ -309,29 +342,77 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
       req = '/android_asset/www/lib/met-office/sitelist.json';
     }
 
-    $http({
-      method: 'GET',
-      url: req
-    }).then( function successCallback(response) {
-      var data = response.data;
-      siteListOnSuccess(data, pos);
-    }, function errorCallback(response) {
-      siteListOnError();
-    });
+    /* We have to do things slightly differently to promisfy the native implementation */
+    function makeNativeSitelistReq(method, url){
+      return new Promise( function(resolve, reject){
+        var sitelist_xhr = new XMLHttpRequest();
+        sitelist_xhr.open(method, url);
 
-    function test(response){
-      return $q( function (resolve){ if(2 === 2) resolve("success") });
+        sitelist_xhr.onload = function(){
+          if(this.status >= 200 && this.status < 300){
+            resolve(sitelist_xhr.response);
+          }
+          else{
+            reject({
+              status: this.status,
+              statusText: sitelist_xhr.statusText
+            });
+          }
+        };
+
+        sitelist_xhr.onerror = function(){
+          reject({
+            status: this.status,
+            statusText: sitelist_xhr.statusText
+          });
+        };
+
+        sitelist_xhr.send();
+      });
     }
 
-    function testy(response){
-      return $q( function (resolve){ console.log(response); return response; });
-    }
+    var promise;
 
     /* Test promise chain - we can see the above two functions returning promises from one to the next, we should do the same with getForecastOnSuccess() and error */
-    return $http({
-      method: 'GET',
-      url: req
-    }).then(function(response){ return siteListOnSuccess(response.data, pos) }, function(){ return siteListOnError(); }).then(function(response){ return response }, function(){ return 'error'; });
+    if(promiseType === '$http'){
+      /* Get Site List */
+      promise = $http({
+        method: 'GET',
+        url: req
+      }).then( 
+        function sitelistSuccessCallback(response){ 
+          // Our sitelist request has loaded successfully, pass it on with our position to request a weather report from the closest weather station
+          return siteListOnSuccess(response.data, pos) 
+        }, 
+        function sitelistErrorCallback(){ 
+          // Our site list request failed, pass it on
+          return siteListOnError(); 
+      }).then(
+        function(response){
+          // Return to the controller, at this point we only need one response function
+          return response; 
+      });
+    }
+    else{
+      /* Get Site List - fallback to native if the promiseType parameter isn't defined */
+      promise = makeNativeSitelistReq(
+        'GET', req
+      ).then(
+        function sitelistSuccessCallback(response){
+          return siteListOnSuccess(response, pos);
+        }
+      ).catch({
+        function(e){
+          throw 'There has been an error getting the "sitelist.json" file.';
+        }
+      }).then(
+        function(response){
+          return response;
+        }
+      );
+    }
+
+    return promise;
   };
 }]);
 

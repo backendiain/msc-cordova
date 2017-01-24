@@ -217,9 +217,19 @@ app.controller('wthrTestCtrl', function ($ionicPlatform, $window, $scope, lazySc
   $ionicPlatform.ready( function(){
     var pos;
 
-    wthrService.getCurrentPosition().then(function (data) {
+    wthrService.getCurrentPosition().then( function (data) {
+
+      /* If these co-ordinates are in Scotland I can already tell you it's raining */
       pos = data;
-      $scope.weather = wthrService.getWeather(pos).then(function(response){ console.log(response); });
+
+      $scope.weather = wthrService.getWeather(pos, '$http').then( function(response){
+
+        /* Output our weather */
+        console.log(response);
+
+        /* Output total time taken */
+      });
+
     });
   });
 });
