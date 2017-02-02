@@ -220,16 +220,36 @@ app.controller('wthrTestCtrl', function ($ionicPlatform, $window, $scope, lazySc
     wthrService.getCurrentPosition().then( function (data) {
 
       /* If these co-ordinates are in Scotland I can already tell you it's raining */
+      $scope.weather;
       pos = data;
 
-      $scope.weather = wthrService.getWeather(pos, '$http').then( function(response){
-
-        /* Output our weather */
+      wthrService.getWeather(pos, '$http').then( function(response){
         console.log(response);
+        /* Output our weather */
+        $scope.weather = response;
+        $scope.weather.date = response.dataDate;
+        $scope.weather.temp = response.temp;
+        $scope.weather.weather_type = response.weather_type;
+        $scope.weather.hum = response.hum;
+        $scope.weather.wind = response.wind;
 
         /* Output total time taken */
       });
 
+    });
+  });
+});
+
+app.controller('iTunesSearchTestCtrl', function ($ionicPlatform, $window, $scope, iTunesSearchService, $http){
+  $ionicPlatform.ready( function(){
+    /*
+      $http.get('/search?term=jim+morrison&country=ca').then(function(data) {
+        console.log(data)
+      })
+    */
+    //http://itunes.apple.com/search?term=jim
+    iTunesSearchService.getResults('/search?term=jim+morrison&country=ca', '$http').then( function (response){
+      console.log('controller', response);
     });
   });
 });

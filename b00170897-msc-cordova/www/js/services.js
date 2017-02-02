@@ -25,6 +25,7 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
   /* promiseType parameter must be equal to '$http' or 'nativeJS' */
   this.getWeather = function (pos, promiseType) {
     var weatherData = {};
+    var weatherReport = {};
 
     function siteListOnSuccess(data, pos) {
       var lat, lng, closest, closest_id, locations, loc_id, nearby, output = [],
@@ -77,148 +78,142 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
         }
 
         weatherData.dataDate = wthrJSON.SiteRep.DV.dataDate; // The date the data requested is for
+        weatherReport.dataDate = weatherData.dataDate;
         weatherData.Param = wthrJSON.SiteRep.Wx.Param; // Explanation for the parameters for each of the weather objects (hourly)
         //console.log(weatherData);
 
         /* Output our weather */
-        var weather_temp = $window.document.getElementsByClassName('weather-temp');
-        if (weather_temp != null) {
-          for (var i = 0; i < weather_temp.length; i++) {
-            weather_temp[i].innerHTML = weatherData.latestReport.T + ' ' + weatherData.Param[1].units;
-          }
-        }
+        weatherReport.temp = weatherData.latestReport.T + ' ' + weatherData.Param[1].units;
 
-        var weather_type = $window.document.getElementsByClassName('weather-type');
-        if (weather_type != null) {
-          for (var i = 0; i < weather_type.length; i++) {
-            /* Definitions from: http://www.metoffice.gov.uk/datapoint/support/documentation/code-definitions# */
-            var weather_type_def = '';
-            var weather_type_val = weatherData.latestReport.W;
-            if (weather_type_val != 'NA') weather_type_val = Number(weather_type_val);
 
-            switch (weather_type_val) {
-              case 'NA':
-                weather_type_def = 'Not available';
-                break;
+        /* Definitions from: http://www.metoffice.gov.uk/datapoint/support/documentation/code-definitions# */
+        var weather_type_def = '';
+        var weather_type_val = weatherData.latestReport.W;
+        if (weather_type_val != 'NA') weather_type_val = Number(weather_type_val);
 
-              case 0:
-                weather_type_def = 'Clear night';
-                break;
+        switch (weather_type_val) {
+          case 'NA':
+            weather_type_def = 'Not available';
+            break;
 
-              case 1:
-                weather_type_def = 'Sunny day';
-                break;
+          case 0:
+            weather_type_def = 'Clear night';
+            break;
 
-              case 2:
-                weather_type_def = 'Partly cloudy (night)';
-                break;
+          case 1:
+            weather_type_def = 'Sunny day';
+            break;
 
-              case 3:
-                weather_type_def = 'Partly cloudy (day)';
-                break;
+          case 2:
+            weather_type_def = 'Partly cloudy (night)';
+            break;
 
-              case 4:
-                weather_type_def = 'Not used';
-                break;
+          case 3:
+            weather_type_def = 'Partly cloudy (day)';
+            break;
 
-              case 5:
-                weather_type_def = 'Mist';
-                break;
+          case 4:
+            weather_type_def = 'Not used';
+            break;
 
-              case 6:
-                weather_type_def = 'Fog';
-                break;
+          case 5:
+            weather_type_def = 'Mist';
+            break;
 
-              case 7:
-                weather_type_def = 'Cloudy';
-                break;
+          case 6:
+            weather_type_def = 'Fog';
+            break;
 
-              case 8:
-                weather_type_def = 'Overcast';
-                break;
+          case 7:
+            weather_type_def = 'Cloudy';
+            break;
 
-              case 9:
-                weather_type_def = 'Light rain shower (night)';
-                break;
+          case 8:
+            weather_type_def = 'Overcast';
+            break;
 
-              case 10:
-                weather_type_def = 'Light rain shower (day)';
-                break;
+          case 9:
+            weather_type_def = 'Light rain shower (night)';
+            break;
 
-              case 11:
-                weather_type_def = 'Drizzle';
-                break;
+          case 10:
+            weather_type_def = 'Light rain shower (day)';
+            break;
 
-              case 12:
-                weather_type_def = 'Light rain';
-                break;
+          case 11:
+            weather_type_def = 'Drizzle';
+            break;
 
-              case 13:
-                weather_type_def = 'Heavy rain shower (night)';
-                break;
+          case 12:
+            weather_type_def = 'Light rain';
+            break;
 
-              case 14:
-                weather_type_def = 'Heavy rain shower (day)';
-                break;
+          case 13:
+            weather_type_def = 'Heavy rain shower (night)';
+            break;
 
-              case 15:
-                weather_type_def = 'Heavy rain';
-                break;
+          case 14:
+            weather_type_def = 'Heavy rain shower (day)';
+            break;
 
-              case 16:
-                weather_type_def = 'Sleet shower (night)';
-                break;
+          case 15:
+            weather_type_def = 'Heavy rain';
+            break;
 
-              case 17:
-                weather_type_def = 'Sleet shower (day)';
-                break;
+          case 16:
+            weather_type_def = 'Sleet shower (night)';
+            break;
 
-              case 18:
-                weather_type_def = 'Sleet';
-                break;
+          case 17:
+            weather_type_def = 'Sleet shower (day)';
+            break;
 
-              case 19:
-                weather_type_def = 'Hail shower (night)';
-                break;
+          case 18:
+            weather_type_def = 'Sleet';
+            break;
 
-              case 20:
-                weather_type_def = 'Hail shower (day)';
-                break;
+          case 19:
+            weather_type_def = 'Hail shower (night)';
+            break;
 
-              case 21:
-                weather_type_def = 'Hail';
-                break;
+          case 20:
+            weather_type_def = 'Hail shower (day)';
+            break;
 
-              case 22:
-                weather_type_def = 'Light snow shower (night)';
-                break;
+          case 21:
+            weather_type_def = 'Hail';
+            break;
 
-              case 23:
-                weather_type_def = 'Light snow shower (day)';
-                break;
+          case 22:
+            weather_type_def = 'Light snow shower (night)';
+            break;
 
-              case 24:
-                weather_type_def = 'Light snow';
-                break;
+          case 23:
+            weather_type_def = 'Light snow shower (day)';
+            break;
 
-              case 25:
-                weather_type_def = 'Heavy snow shower (night)';
-                break;
+          case 24:
+            weather_type_def = 'Light snow';
+            break;
 
-              case 26:
-                weather_type_def = 'Heavy snow shower (day)';
-                break;
+          case 25:
+            weather_type_def = 'Heavy snow shower (night)';
+            break;
 
-              case 27:
-                weather_type_def = 'Heavy snow';
-                break;
+          case 26:
+            weather_type_def = 'Heavy snow shower (day)';
+            break;
 
-              case 28:
-                weather_type_def = 'Thunder shower (night)';
-                break;
+          case 27:
+            weather_type_def = 'Heavy snow';
+            break;
 
-              case 29:
-                weather_type_def = 'Thunder shower (day)';
+          case 28:
+            weather_type_def = 'Thunder shower (night)';
+            break;
+
+          case 29:
+            weather_type_def = 'Thunder shower (day)';
                 break;
 
               case 30:
@@ -228,33 +223,14 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
               default:
                 weather_type_def = 'Not available';
                 break;
-            }
-
-            weather_type[i].innerHTML = weather_type_def;
-          }
         }
 
-        var weather_hum = $window.document.getElementsByClassName('weather-humidity');
-        if (weather_hum != null) {
-          for (var i = 0; i < weather_hum.length; i++) {
-            weather_hum[i].innerHTML = weatherData.latestReport.H + weatherData.Param[9].units + ' humidity';
-          }
-        }
+        weatherReport.weather_type = weather_type_def;
+        weatherReport.hum = weatherData.latestReport.H + weatherData.Param[9].units;
+        weatherReport.wind = weatherData.latestReport.S + weatherData.Param[4].units + ' wind, ' + weatherData.latestReport.D;
 
-        var weather_wind = $window.document.getElementsByClassName('weather-wind');
-        if (weather_wind != null) {
-          for (var i = 0; i < weather_wind.length; i++) {
-            weather_wind[i].innerHTML = weatherData.latestReport.S + weatherData.Param[4].units + ' wind, ' + weatherData.latestReport.D;
-          }
-        }
-
-        var weather_containers = $window.document.getElementsByClassName('weather-details');
-        if (weather_containers != null) {
-          for (var i = 0; i < weather_containers.length; i++) {
-            weather_containers[i].className = weather_containers[i].className + ' loaded';
-          }
-        }
-        return weatherData;
+        // return weatherData; <---- Raw report
+        return weatherReport;
       };
 
       /* Our callback function to fire in case of an error */
@@ -479,5 +455,87 @@ app.service('cordovaTriggerTestService', ['$q', function ($q, $window, $scope){
     });
 
     return promise;
+  }
+}]);
+
+app.service('iTunesSearchService', ['$http', function ($http){
+ 
+  /* API Docs Here: https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/#searchexamples */
+  this.getResults = function (req, promiseType) {
+
+    /* We have to do things slightly differently to promisfy the native implementation */
+    function makeiTunesSearchReq(method, url){
+      return new Promise( function(resolve, reject){
+        var itunes_xhr = new XMLHttpRequest();
+        itunes_xhr.open(method, url);
+
+        itunes_xhr.onload = function(){
+          if(this.status >= 200 && this.status < 300){
+            resolve(itunes_xhr.response);
+          }
+          else{
+            reject({
+              status: this.status,
+              statusText: itunes_xhr.statusText
+            });
+          }
+        };
+
+        itunes_xhr.onerror = function(){
+          reject({
+            status: this.status,
+            statusText: itunes_xhr.statusText
+          });
+        };
+
+        itunes_xhr.send();
+      });
+    }
+
+    var promise = false;
+
+    /* NOTE:
+     * Our request is expected as: "https://itunes.apple.com/search?term=jack+johnson" if in production, 
+     * OR "/search?term=jack+johnson" in development with our node server.js file running and NOT ionic for proxy support.
+     * SO BE SURE TO PASS THAT WHEN CALLING THIS SERVICE!
+     */
+    var reqUrl = req;
+
+    if(promiseType === '$http'){
+      /* Get Site List */
+      return promise = $http({
+        method: 'GET',
+        url: reqUrl
+      }).then(
+        function iTunesSearchSuccessCallback(response){
+          console.log('angular', response);
+          return response;
+        },
+        function iTunesSearchErrorCallback(){
+          console.error('There has been an error returning results for your iTunes search query.');
+        }
+      );
+    }
+    else{
+      /* Get Site List - fallback to native if the promiseType parameter isn't defined */
+      return promise = makeiTunesSearchReq(
+        'GET', reqUrl
+      ).then(
+        function iTunesSearchSuccessCallback(response){
+          console.log('native', JSON.parse(response));
+          return JSON.parse(response);
+        }
+      ).catch({
+        function(e){
+          throw 'There has been an error returning results for your iTunes search query.';
+        }
+      });
+    }
+
+    /* If we've caught nothing return false */
+    return promise;
+  },
+  this.addResultsToIndexDB = function(json){
+
   }
 }]);

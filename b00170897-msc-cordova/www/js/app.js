@@ -158,6 +158,16 @@ app.config(function ($stateProvider, $urlRouterProvider, $controllerProvider, $c
       }
     })
 
+    .state('app.iTunesSearchTest', {
+      url: '/itunes-search-test',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/itunes-search-test.html',
+          controller: 'iTunesSearchTestCtrl'
+        }
+      }
+    })
+
     .state('app.videoTest', {
       url: '/video-test',
       views: {
