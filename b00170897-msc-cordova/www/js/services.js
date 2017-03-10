@@ -229,6 +229,9 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
         weatherReport.hum = weatherData.latestReport.H + weatherData.Param[9].units;
         weatherReport.wind = weatherData.latestReport.S + weatherData.Param[4].units + ' wind, ' + weatherData.latestReport.D;
 
+        // We're done processing, let's take note!
+        window.weather_timestamps.processingTime = performance.now();
+
         // return weatherData; <---- Raw report
         return weatherReport;
       };
@@ -282,6 +285,7 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
           url: forecast_req 
         }).then(
           function forecastReqSuccessCallback(forecast) {
+            window.weather_timestamps.retrievalTime = performance.now();
             var forecast = getForecastOnSuccess(forecast.data);
             return forecast;
           }, 
@@ -290,11 +294,12 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
         });
       }
       else{
-        /* Get Site List - fallback to native if the promiseType parameter isn't defined */
+        /* Get forecast - fallback to native if the promiseType parameter isn't defined */
         promise = makeNativeForecastReq(
           'GET', forecast_req
         ).then( 
-          function forecastReqSuccessCallback(forecast){ 
+          function forecastReqSuccessCallback(forecast){
+            window.weather_timestamps.retrievalTime = performance.now();
             var forecast = getForecastOnSuccess( JSON.parse(forecast) ); // Convert the returned string back to an object
             return forecast;
         }).catch(
@@ -377,10 +382,9 @@ app.service('wthrService', ['$window', '$http', '$q', '$cordovaGeolocation', fun
         function sitelistSuccessCallback(response){
           return siteListOnSuccess(response, pos);
         }
-      ).catch({
+      ).catch(
         function(e){
           throw 'There has been an error getting the "sitelist.json" file.';
-        }
       }).then(
         function(response){
           return response;
@@ -459,6 +463,8 @@ app.service('cordovaTriggerTestService', ['$q', function ($q, $window, $scope){
 }]);
 
 app.service('iTunesSearchService', ['$http', function ($http){
+
+  this.results = [],
  
   /* API Docs Here: https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/#searchexamples */
   this.getResults = function (req, promiseType) {
@@ -509,7 +515,7 @@ app.service('iTunesSearchService', ['$http', function ($http){
       }).then(
         function iTunesSearchSuccessCallback(response){
           console.log('angular', response);
-          return response;
+          return response.data;
         },
         function iTunesSearchErrorCallback(){
           console.error('There has been an error returning results for your iTunes search query.');
@@ -517,7 +523,7 @@ app.service('iTunesSearchService', ['$http', function ($http){
       );
     }
     else{
-      /* Get Site List - fallback to native if the promiseType parameter isn't defined */
+      /* iTunes Request - fallback to native if the promiseType parameter isn't defined */
       return promise = makeiTunesSearchReq(
         'GET', reqUrl
       ).then(
@@ -525,17 +531,13 @@ app.service('iTunesSearchService', ['$http', function ($http){
           console.log('native', JSON.parse(response));
           return JSON.parse(response);
         }
-      ).catch({
+      ).catch(
         function(e){
           throw 'There has been an error returning results for your iTunes search query.';
-        }
       });
     }
 
     /* If we've caught nothing return false */
     return promise;
-  },
-  this.addResultsToIndexDB = function(json){
-
   }
 }]);

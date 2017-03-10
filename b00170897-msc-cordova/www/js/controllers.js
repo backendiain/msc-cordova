@@ -182,7 +182,7 @@ app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $w
     */
 
     if(typeof cordova.plugins.cordovaPluginTriggerBenchmark === 'object'){
-      $scope.result = '0.00ms';
+      $scope.result = '0.00s';
 
       /* Let's store this as a $scope variable so we can access the methods via ng-click directives */
       $scope.seq = function(total, len){
@@ -191,7 +191,7 @@ app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $w
         cordovaTriggerTestService.seq(total, len).then( 
           function (result){
             console.log('Sequential result: ' + result);
-            $scope.result = result + 'ms';
+            $scope.result = result + 's';
           },
           function (reject){
             console.log(reject);
@@ -203,7 +203,7 @@ app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $w
         cordovaTriggerTestService.con(total, len).then( 
           function (result){
             console.log('Consequential result: ' + result);
-            $scope.result = result + 'ms';
+            $scope.result = result + 's';
           },
           function (reject){
             console.log(reject);
@@ -215,28 +215,82 @@ app.controller('cordovaTriggerPerformanceTestCtrl', function ($ionicPlatform, $w
 
 app.controller('wthrTestCtrl', function ($ionicPlatform, $window, $scope, lazyScriptLoaderService, wthrService){
   $ionicPlatform.ready( function(){
-    var pos;
 
-    wthrService.getCurrentPosition().then( function (data) {
+    /* Results view vars */
+    $scope.latitude = 0;
+    $scope.longitude = 0;
+    $scope.retrievalTime = 0 + 'ms';
+    $scope.processingTime = 0 + 'ms';
+    $scope.outputTime = 0 + 'ms';
+    $scope.totalTime = 0 + 'ms';
 
-      /* If these co-ordinates are in Scotland I can already tell you it's raining */
-      $scope.weather;
-      pos = data;
+    $scope.getWeatherClick = function(type){
 
-      wthrService.getWeather(pos, '$http').then( function(response){
-        console.log(response);
-        /* Output our weather */
-        $scope.weather = response;
-        $scope.weather.date = response.dataDate;
-        $scope.weather.temp = response.temp;
-        $scope.weather.weather_type = response.weather_type;
-        $scope.weather.hum = response.hum;
-        $scope.weather.wind = response.wind;
+      /* This is the object for the time taken to retrieve the weather forecast and also the time taken to process and output it */
+      window.weather_timestamps = {
+          originTime: performance.now(),
+          retrievalTime: 0,
+          processingTime: 0,
+          outputTime: 0
+      };
 
-        /* Output total time taken */
+      /* 
+       * Using the startTimestamp from the performance() API as a baseline we can subtract other performance.now()
+       * timestamps from it to get accurate timings of the retrieval, processing and output times
+      */
+
+      var pos;
+      var promise_type = type;
+
+      wthrService.getCurrentPosition().then( function (data) {
+
+        /* If these co-ordinates are in Scotland I can already tell you it's raining */
+        $scope.weather;
+        // console.log(data);
+        pos = {
+          coords: {
+            latitude: 55.843353, // Co-ords for UWS, Paisley Campus
+            longitude: -4.429053
+          }
+        }
+
+        // pos = data; Uncomment to have real geopositioned co-ordinates
+        $scope.latitude = pos.coords.latitude;
+        $scope.longitude = pos.coords.longitude;
+
+        wthrService.getWeather(pos, promise_type).then( function(response){
+          console.log('Weather Report:', response);
+
+          /* Output our weather */
+          $scope.weather = response;
+          $scope.weather.date = response.dataDate;
+          $scope.weather.temp = response.temp;
+          $scope.weather.weather_type = response.weather_type;
+          $scope.weather.hum = response.hum;
+          $scope.weather.wind = response.wind;
+
+          /* Calculate our performance speed times */
+          window.weather_timestamps.outputTime = performance.now();
+          console.log('Times:', window.weather_timestamps);
+
+          var retrieval_time = window.weather_timestamps.retrievalTime - window.weather_timestamps.originTime;
+          var processing_time = window.weather_timestamps.processingTime - window.weather_timestamps.retrievalTime;
+          var output_time = window.weather_timestamps.outputTime - window.weather_timestamps.processingTime;
+          var total_time = retrieval_time + processing_time + output_time;
+
+          // console.log(retrieval_time);
+          // console.log(processing_time);
+          // console.log(output_time);
+
+          /* Output our results */
+          $scope.retrievalTime = retrieval_time.toPrecision(5) + 'ms';
+          $scope.processingTime = processing_time.toPrecision(5) + 'ms';
+          $scope.outputTime = output_time.toPrecision(5) + 'ms';
+          $scope.totalTime = total_time.toPrecision(5) + 'ms';
+        });
+
       });
-
-    });
+    }
   });
 });
 
@@ -248,8 +302,11 @@ app.controller('iTunesSearchTestCtrl', function ($ionicPlatform, $window, $scope
       })
     */
     //http://itunes.apple.com/search?term=jim
-    iTunesSearchService.getResults('/search?term=jim+morrison&country=ca', '$http').then( function (response){
+    iTunesSearchService.getResults('/search?term=jim+morrison&country=ca', '$http').then( function (response){ 
       console.log('controller', response);
+      return iTunesSearchService.addResultsToIndexDB( response );
+    }).then( function (response){
+      console.log('end', response);
     });
   });
 });

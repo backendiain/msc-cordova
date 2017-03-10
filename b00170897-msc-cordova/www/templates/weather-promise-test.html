@@ -1,12 +1,25 @@
 <ion-view cache-view="false" view-title="Weather Promise Test">
   <ion-content class="content">
-  	<dl>
-  		<dt>Weather Report for</dt>
-  		<dd>{{weather.date}}</dd>
-  		<dd>{{weather.temp}}</dd>
-  		<dd>{{weather.weather_type}}</dd>
-  		<dd>{{weather.hum}}</dd>
-  		<dd>{{weather.wind}}</dd>
-  	</dl>
+    <section id="weather-report">
+    	<dl id="weather-report-results-list">
+    		<dt>Weather Report</dt>
+        <dd id="weather-report-coordinates"><strong>Co-Ordinates:</strong> {{latitude}}, {{longitude}}</dd>
+    		<dd id="weather-report-date"><strong>Date-stamp:</strong> {{weather.date}}</dd>
+    		<dd id="weather-report-temp"><strong>Temperature:</strong> {{weather.temp}}</dd>
+    		<dd id="weather-report-weather-type"><strong>Weather Type:</strong> {{weather.weather_type}}</dd>
+    		<dd id="weather-report-humidity"><strong>Humidity:</strong> {{weather.hum}}</dd>
+    		<dd id="weather-report-wind"><strong>Wind:</strong> {{weather.wind}}</dd>
+    	</dl>
+
+      <p id="weather-report-retrieval-time"><strong>Retrieval Time:</strong> {{retrievalTime}}</p>
+      <p id="weather-report-processing-time"><strong>Processing Time:</strong> {{processingTime}}</p>
+      <p id="weather-report-output-time"><strong>Output Time:</strong> {{outputTime}}</p>
+      <p id="weather-report-total-time"><strong>Approximate Total Time:</strong> {{totalTime}}</p>
+
+      <button id="weather-promise-get-weather-angular" ng-click="getWeatherClick('$http')">Get Weather - Angular Promise</button>
+      <button id="weather-promise-get-weather-nativejs" ng-click="getWeatherClick()">Get Weather - Native JS Promise</button>
+
+      <p id="weather-coords-note"><em>Note: For the sake of this experiment the geo co-ordinates are hard coded. However, this can be easily tweaked as detailed in the controller.</em></p>
+    </section>
   </ion-content>
 </ion-view>
