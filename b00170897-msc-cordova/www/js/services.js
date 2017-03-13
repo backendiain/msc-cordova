@@ -514,7 +514,7 @@ app.service('iTunesSearchService', ['$http', function ($http){
         url: reqUrl
       }).then(
         function iTunesSearchSuccessCallback(response){
-          console.log('angular', response);
+          // console.log('angular', response);
           return response.data;
         },
         function iTunesSearchErrorCallback(){

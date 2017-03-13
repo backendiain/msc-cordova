@@ -271,7 +271,7 @@ app.controller('wthrTestCtrl', function ($ionicPlatform, $window, $scope, lazySc
 
           /* Calculate our performance speed times */
           window.weather_timestamps.outputTime = performance.now();
-          console.log('Times:', window.weather_timestamps);
+          // console.log('Times:', window.weather_timestamps);
 
           var retrieval_time = window.weather_timestamps.retrievalTime - window.weather_timestamps.originTime;
           var processing_time = window.weather_timestamps.processingTime - window.weather_timestamps.retrievalTime;
@@ -296,18 +296,26 @@ app.controller('wthrTestCtrl', function ($ionicPlatform, $window, $scope, lazySc
 
 app.controller('iTunesSearchTestCtrl', function ($ionicPlatform, $window, $scope, iTunesSearchService, $http){
   $ionicPlatform.ready( function(){
+    $scope.totalTime = '0.00';
+
     /*
       $http.get('/search?term=jim+morrison&country=ca').then(function(data) {
         console.log(data)
       })
     */
     //http://itunes.apple.com/search?term=jim
-    iTunesSearchService.getResults('/search?term=jim+morrison&country=ca', '$http').then( function (response){ 
-      console.log('controller', response);
-      return iTunesSearchService.addResultsToIndexDB( response );
-    }).then( function (response){
-      console.log('end', response);
-    });
+
+    $scope.searchiTunesMediaClick = function(promiseType){
+      window.iTunes_search_start_time = performance.now();
+
+      var limit = typeof this.itunes_search_qry_limit != 'undefined' ? this.itunes_search_qry_limit : 50;
+
+      iTunesSearchService.getResults('/search?term=the+beatles&country=gb&limit=' + limit, '$http').then( function (response){
+        var total_time = (performance.now() - window.iTunes_search_start_time).toPrecision(5);
+        console.log('Response & Time:', response, total_time + 'ms');
+        $scope.totalTime = total_time;
+      });
+    }
   });
 });
 

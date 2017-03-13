@@ -1,12 +1,49 @@
-<ion-view cache-view="false" view-title="iTunes Search IndexDB Test">
+<ion-view cache-view="false" view-title="iTunes Search Test">
   <ion-content class="content">
-  	<dl>
-  		<dt>Weather Report for</dt>
-  		<dd>{{weather.date}}</dd>
-  		<dd>{{weather.temp}}</dd>
-  		<dd>{{weather.weather_type}}</dd>
-  		<dd>{{weather.hum}}</dd>
-  		<dd>{{weather.wind}}</dd>
-  	</dl>
+    <h3>iTunes Search API Test</h3>
+    <form id="itunes-search-results">
+      <ul id="itunes-search-query-details-list">
+        <li id="itunes-search-query-terms">
+          <p><strong>Term: </strong> The Beatles</p>
+        </li>
+
+        <li id="itunes-search-query-url">
+          <p><strong>URL:</strong> /search?term=the+beatles&amp;country=gb&amp;limit=XXX</p>
+        </li>
+
+        <li id="itunes-search-query-limit">
+          <p><strong>Query Limit:</strong></p>
+
+          <label id="itunes-search-query-limit-25" class="checkbox">
+            <input type="radio" name="query_limit" value="25" class="itunes-search-query-limit-option positive" ng-model="itunes_search_qry_limit" checked> 25
+          </label>
+
+          <label id="itunes-search-query-limit-50" class="checkbox">
+            <input type="radio" name="query_limit" value="50" class="itunes-search-query-limit-option" ng-model="itunes_search_qry_limit"> 50
+          </label>
+
+          <label id="itunes-search-query-limit-100" class="checkbox">
+            <input type="radio" name="query_limit" value="100" class="itunes-search-query-limit-option" ng-model="itunes_search_qry_limit"> 100
+          </label>
+
+          <label id="itunes-search-query-limit-150" class="checkbox">
+            <input type="radio" name="query_limit" value="150" class="itunes-search-query-limit-option" ng-model="itunes_search_qry_limit"> 150
+          </label>
+
+          <label id="itunes-search-query-limit-200" class="checkbox">
+            <input type="radio" name="query_limit" value="200" class="itunes-search-query-limit-option" ng-model="itunes_search_qry_limit"> 200
+          </label>
+        </li>
+
+        <li id="itunes-search-query-time">
+          <p><strong>Time Taken: {{totalTime}}ms</strong></p>
+        </li>
+
+        <li id="itunes-search-query-cta">
+          <button id="itunes-search-query-cta-angular" ng-click="searchiTunesMediaClick('$http')" class="button button-positive">Search - Angular Promise</button>
+          <button id="itunes-search-query-cta-nativejs" ng-click="searchiTunesMediaClick('native')" class="button button-positive">Search - Native JavaScript Promise</button>
+        </li>
+      </ul>
+    </form>
   </ion-content>
 </ion-view>
