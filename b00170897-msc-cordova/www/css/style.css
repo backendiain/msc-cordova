@@ -1325,6 +1325,17 @@ p#bridge-result span#result{
   font-style:italic;
 }
 
+/* iTunes Search Query Test */
+ul#itunes-search-query-details-list li#itunes-search-query-time{
+  margin-bottom:16px;
+  margin-bottom:1rem;
+}
+
+ul#itunes-search-query-details-list li#itunes-search-query-cta button{
+  margin-bottom:12px;
+  margin-bottom:0.75rem;
+}
+
 /* Video Stress Test */
 .video-wrapper{
   width:100%;

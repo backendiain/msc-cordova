@@ -296,21 +296,15 @@ app.controller('wthrTestCtrl', function ($ionicPlatform, $window, $scope, lazySc
 
 app.controller('iTunesSearchTestCtrl', function ($ionicPlatform, $window, $scope, iTunesSearchService, $http){
   $ionicPlatform.ready( function(){
+    var root = ionic.Platform.isAndroid() ? 'http://itunes.apple.com/' : '/';
     $scope.totalTime = '0.00';
 
-    /*
-      $http.get('/search?term=jim+morrison&country=ca').then(function(data) {
-        console.log(data)
-      })
-    */
-    //http://itunes.apple.com/search?term=jim
-
     $scope.searchiTunesMediaClick = function(promiseType){
+
       window.iTunes_search_start_time = performance.now();
+      var limit = typeof this.itunes_search_qry_limit != 'undefined' ? this.itunes_search_qry_limit : 25;
 
-      var limit = typeof this.itunes_search_qry_limit != 'undefined' ? this.itunes_search_qry_limit : 50;
-
-      iTunesSearchService.getResults('/search?term=the+beatles&country=gb&limit=' + limit, '$http').then( function (response){
+      iTunesSearchService.getResults(root + 'search?term=the+beatles&country=gb&limit=' + limit, '$http').then( function (response){
         var total_time = (performance.now() - window.iTunes_search_start_time).toPrecision(5);
         console.log('Response & Time:', response, total_time + 'ms');
         $scope.totalTime = total_time;
@@ -336,14 +330,14 @@ app.controller('videoTestCtrl', function ($ionicPlatform, $window, $scope, lazyS
 
           // Start our video
           player.play();
-          alert('We are playing!');
+          //alert('We are playing!');
         });
 
         player.on('ended', function() {
 
           // Register the end value of our timestamp for the end point of our stress test
 
-          alert('video is done!');
+          //alert('video is done!');
         });
 
       });

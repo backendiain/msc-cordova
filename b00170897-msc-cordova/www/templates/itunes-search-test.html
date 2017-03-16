@@ -8,11 +8,11 @@
         </li>
 
         <li id="itunes-search-query-url">
-          <p><strong>URL:</strong> /search?term=the+beatles&amp;country=gb&amp;limit=XXX</p>
+          <p><strong>URL:</strong> http://itunes.apple.com/search?term=the+beatles&amp;country=gb&amp;limit=XXX</p>
         </li>
 
         <li id="itunes-search-query-limit">
-          <p><strong>Query Limit:</strong></p>
+          <p><strong>Query Limit (Default 25):</strong></p>
 
           <label id="itunes-search-query-limit-25" class="checkbox">
             <input type="radio" name="query_limit" value="25" class="itunes-search-query-limit-option positive" ng-model="itunes_search_qry_limit" checked> 25
@@ -22,12 +22,24 @@
             <input type="radio" name="query_limit" value="50" class="itunes-search-query-limit-option" ng-model="itunes_search_qry_limit"> 50
           </label>
 
+          <label id="itunes-search-query-limit-75" class="checkbox">
+            <input type="radio" name="query_limit" value="75" class="itunes-search-query-limit-option" ng-model="itunes_search_qry_limit"> 75
+          </label>
+
           <label id="itunes-search-query-limit-100" class="checkbox">
             <input type="radio" name="query_limit" value="100" class="itunes-search-query-limit-option" ng-model="itunes_search_qry_limit"> 100
           </label>
 
+          <label id="itunes-search-query-limit-125" class="checkbox">
+            <input type="radio" name="query_limit" value="125" class="itunes-search-query-limit-option" ng-model="itunes_search_qry_limit"> 125
+          </label>
+
           <label id="itunes-search-query-limit-150" class="checkbox">
             <input type="radio" name="query_limit" value="150" class="itunes-search-query-limit-option" ng-model="itunes_search_qry_limit"> 150
+          </label>
+
+          <label id="itunes-search-query-limit-175" class="checkbox">
+            <input type="radio" name="query_limit" value="175" class="itunes-search-query-limit-option" ng-model="itunes_search_qry_limit"> 175
           </label>
 
           <label id="itunes-search-query-limit-200" class="checkbox">
